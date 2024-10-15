@@ -1,0 +1,66 @@
+###
+GET http://localhost:8080
+
+### 
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "dkaoda",
+  "email": "ryuhosoy@yahoo.co.jp",
+  "password": "555555"
+}
+
+### 
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "userId": "ryuhei",
+  "companyName": "aa"
+}
+
+###
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "ryuhosoy@yahoo.co.jp",
+  "password": "55555555"
+}
+
+###
+PUT  http://localhost:8080/api/users/66de9c21217f1ab8682480ef
+Content-Type: application/json
+
+{
+  "userId": "66de9c21217f1ab8682480ef",
+  "username": "ryuhosoy更新2"
+}
+
+###
+DELETE http://localhost:8080/api/users/66e13341f99ede0fcbc7b2e9
+Content-Type: application/json
+
+{
+  "userId": "66e13341f99ede0fcbc7b2e9"
+}
+
+###
+GET  http://localhost:8080/api/users/66de8be96220fa7ae95133f4
+
+###
+PUT  http://localhost:8080/api/users/66e12cf2cbf45d65dad040ad/follow
+Content-Type: application/json
+
+{
+  "userId": "66e13341f99ede0fcbc7b2e9"
+}
+
+###
+PUT  http://localhost:8080/api/users/66e12cf2cbf45d65dad040ad/unfollow
+Content-Type: application/json
+
+{
+  "userId": "66e13341f99ede0fcbc7b2e9"
+}
