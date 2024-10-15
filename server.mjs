@@ -21,8 +21,7 @@ mongoose
   });
 
 const openai = new OpenAI({
-  apiKey:
-    "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",
+  apiKey: process.env.OpenAI_API_KEY,
 });
 
 const app = express();
