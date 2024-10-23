@@ -21,16 +21,19 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
   const fetchNewsForCompany = async (companyName) => {
     try {
       const res = await axios.post(`http://localhost:8080/api/news`, { companyName });
+      console.log("res", res);
 
       setNews((prevNews) => ({
         ...prevNews,
-        [companyName]: res.data, // 会社ごとにニュースを保存
+        [companyName]: res.data.news, // 会社ごとにニュースを保存
       }));
     } catch (err) {
       console.error("ニュース取得エラー:", err);
     }
   };
 
+  console.log("news", news);
+  
   const deleteNewsForCompany = (companyName) => {
     setNews((prevNews) => {
       const newNews = { ...prevNews };
@@ -90,44 +93,42 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   return (
     <div className="Answer-wrp">
-      {response ?
-        <div>
-          <button onClick={addToFavoriteCompanies}>お気に入り</button>
-        </div>
-        : ""}
-      <div>
-        {answerLoading ? <p>回答を作っています...</p> : response}
+      <div className="answer">
+        <p className="answer-head">検索結果</p>
+        {answerLoading ? <p>回答を作っています...</p> : <p className="company-detail">{response}</p>}
+        {response ?
+          <div>
+            <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
+          </div>
+          : ""}
       </div>
       <div className="favoriteCompanies-wrp">
-        <p>お気に入り企業一覧</p>
+        <p className="favoriteCompanies-head">お気に入り企業一覧</p>
         {favoriteCompanies ? (
           favoriteCompanies.map((object, index) => (
-            <div key={index}>
-              <p>{object.companyName}</p>
-              <p>{object.companyAbout}</p>
-              <button
-                onClick={() =>
-                  deleteFromFavoriteCompanies(object.companyName, object.companyAbout)
-                }
-              >
-                お気に入りから削除する
-              </button>
-
+            <div key={index} className="favoriteCompany">
+              <p className="favoriteCompanies-name">{object.companyName}</p>
+              <p className="favoriteCompanies-about">{object.companyAbout}</p>
               <div className="news-section">
-                <p>{object.companyName}に関するニュース一覧</p>
+                <p className="news-section-head">{object.companyName}に関するニュース</p>
                 {news[object.companyName] ? (
-                  news[object.companyName].articles.map((article, i) => (
-                    <div key={i}>
-                      <a href={article.url} target="_blank" rel="noopener noreferrer">
-                        <h4>{article.title}</h4>
-                      </a>
-                      <p>{article.description}</p>
-                    </div>
+                  news[object.companyName].value.map((news, i) => (
+                    <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
+                      <p className="news-description">{news.description}</p>
+                      <img className="news-image" src={news.image.contentUrl} alt="" />
+                    </a>
                   ))
                 ) : (
                   <p>関連するニュースがありません。</p>
                 )}
               </div>
+              <button className="deleteFromFavoriteCompaniesButton"
+                onClick={() =>
+                  deleteFromFavoriteCompanies(object.companyName, object.companyAbout)
+                }
+              >
+                {object.companyName}をお気に入りから削除する
+              </button>
             </div>
           ))
         ) : (

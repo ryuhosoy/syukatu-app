@@ -1,8 +1,67 @@
 .Answer-wrp {
   margin-top: 50px;
+  padding: 30px;
   color: white;
+}
+
+.answer-head {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.company-detail {
+  padding: 20px 0;
 }
 
 .favoriteCompanies-wrp {
   color: white;
+  margin-top: 30px;
+}
+
+.favoriteCompanies-head {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.favoriteCompany {
+  border-bottom: 2px solid white;
+  padding: 20px 0;
+}
+
+.favoriteCompanies-name {
+  display: inline-block;
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom: 2px solid white;
+}
+
+.favoriteCompanies-about {
+  margin-top: 20px;
+}
+
+.news-section-head {
+  font-size: 25px;
+  font-weight: bold;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.news-item {
+  padding-bottom: 20px;
+  display: flex;
+  gap: 20px;
+}
+
+.news-item:hover {
+  opacity: 0.6;
+}
+
+.news-description {
+  width: 80%;
+}
+
+.news-image {
+  width: 20%;
 }

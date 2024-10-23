@@ -47,14 +47,14 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
         </form>
       </div>
       <div className="topbarRight">
-        <div className="topbarIconItem">
+        {/* <div className="topbarIconItem">
           <Chat />
           <span className="topbarIconBadge">1</span>
         </div>
         <div className="topbarIconItem">
           <Notifications />
           <span className="topbarIconBadge">2</span>
-        </div>
+        </div> */}
       </div>
       <button type="button" onClick={logout}>ログアウト</button>
     </div>

@@ -8,6 +8,7 @@ import postsRoute from "./routes/posts.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
 import NewsAPI from "newsapi";
+import https from "https";
 
 env.config();
 
@@ -144,17 +145,42 @@ app.post("/api/chat", async (req, res) => {
 });
 
 app.post("/api/news", async (req, res) => {
-  const newsapi = new NewsAPI(process.env.NEWS_API_KEY);
-  newsapi.v2
-    .everything({
-      q: `${req.body.companyName} AND (就活 OR 採用 OR 求人)`,
-      pageSize: 5,
-      page: 1,
-    })
-    .then((response) => {
-      console.log(response);
-      res.send(response);
-    });
+  const SUBSCRIPTION_KEY = process.env.AZURE_SUBSCRIPTION_KEY;
+  if (!SUBSCRIPTION_KEY) {
+    throw new Error("Missing the AZURE_SUBSCRIPTION_KEY environment variable");
+  }
+  function bingWebSearch(query) {
+    https.get(
+      {
+        hostname: "api.bing.microsoft.com",
+        path: "/v7.0/search?q=" + encodeURIComponent(query),
+        headers: { "Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY },
+      },
+      (response) => {
+        let body = "";
+        response.on("data", (part) => (body += part));
+        response.on("end", () => {
+          for (var header in response.headers) {
+            if (
+              header.startsWith("bingapis-") ||
+              header.startsWith("x-msedge-")
+            ) {
+              console.log(header + ": " + response.headers[header]);
+            }
+          }
+          console.log("\nJSON Response:\n");
+          console.dir(JSON.parse(body), { colors: false, depth: null });
+          res.send(JSON.parse(body));
+        });
+        response.on("error", (e) => {
+          console.log("Error: " + e.message);
+          throw e;
+        });
+      }
+    );
+  }
+  const query = `${req.body.companyName}関連ニュース`;
+  bingWebSearch(query);
 });
 
 const port = 8080;
