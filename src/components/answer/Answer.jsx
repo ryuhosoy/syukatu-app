@@ -33,7 +33,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
   };
 
   console.log("news", news);
-  
+
   const deleteNewsForCompany = (companyName) => {
     setNews((prevNews) => {
       const newNews = { ...prevNews };
@@ -110,7 +110,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
               <p className="favoriteCompanies-name">{object.companyName}</p>
               <p className="favoriteCompanies-about">{object.companyAbout}</p>
               <div className="news-section">
-                <p className="news-section-head">{object.companyName}に関するニュース</p>
+                <p className="news-section-head">{object.companyName}に関する最近のニュース</p>
                 {news[object.companyName] ? (
                   news[object.companyName].value.map((news, i) => (
                     <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
