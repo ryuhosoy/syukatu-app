@@ -115,7 +115,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
                   news[object.companyName].value.map((news, i) => (
                     <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
                       <p className="news-description">{news.description}</p>
-                      <img className="news-image" src={news.image.contentUrl} alt="" />
+                      {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />}
                     </a>
                   ))
                 ) : (
