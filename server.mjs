@@ -28,8 +28,8 @@ const app = express();
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "https://syukatu-app.vercel.app",
-    methods: ["POST", "GET"],
+    origin: true,
+    method: [],
   })
 );
 
