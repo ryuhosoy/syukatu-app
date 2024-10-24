@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Answer from "../../components/answer/answer";
+import Answer from "../../components/answer/Answer";
 import Topbar from "../../components/topbar/Topbar";
 
 function Home() {
