@@ -26,7 +26,12 @@ const openai = new OpenAI({
 
 const app = express();
 app.use(bodyParser.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://syukatu-app.vercel.app",
+    methods: ["POST", "GET"],
+  })
+);
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
