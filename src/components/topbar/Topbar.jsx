@@ -14,7 +14,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setAnswerLoading(true);
-    axios.post("https://syukatu-app-backend-idr7lucrf-ryuhosoys-projects.vercel.app/api/chat", { prompt }).then((res) => {
+    axios.post("https://syukatu-app-backend.vercel.app/api/chat", { prompt }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }

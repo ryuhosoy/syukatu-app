@@ -20,7 +20,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   const fetchNewsForCompany = async (companyName) => {
     try {
-      const res = await axios.post(`https://syukatu-app-backend-idr7lucrf-ryuhosoys-projects.vercel.app/api/news`, { companyName });
+      const res = await axios.post(`https://syukatu-app-backend.vercel.app/api/news`, { companyName });
       console.log("res", res);
 
       setNews((prevNews) => ({
@@ -44,7 +44,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   const fetchFavoriteCompanies = async () => {
     try {
-      const res = await axios.get(`https://syukatu-app-backend-idr7lucrf-ryuhosoys-projects.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
+      const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
       setFavoriteCompanies(res.data);
     } catch (err) {
       console.error(err);
@@ -60,7 +60,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     };
 
     try {
-      await axios.put(`https://syukatu-app-backend-idr7lucrf-ryuhosoys-projects.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
+      await axios.put(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
     } catch (err) {
       console.log(err);
     }
@@ -77,7 +77,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     console.log("deleteFavoriteCompanyContent", deleteFavoriteCompanyContent);
 
     try {
-      await axios.delete(`https://syukatu-app-backend-idr7lucrf-ryuhosoys-projects.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
+      await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
         data: {
           userId: user._id,
           deleteFavoriteCompanyContent,

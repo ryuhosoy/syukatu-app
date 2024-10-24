@@ -7,7 +7,6 @@ import usersRoute from "./routes/users.mjs";
 import postsRoute from "./routes/posts.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
-import NewsAPI from "newsapi";
 import https from "https";
 
 env.config();
