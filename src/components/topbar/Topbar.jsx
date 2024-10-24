@@ -14,7 +14,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setAnswerLoading(true);
-    axios.post("https://https://syukatu-app-backend.onrender.com//api/chat", { prompt }).then((res) => {
+    axios.post("https://https://syukatu-app-backend.onrender.com/api/chat", { prompt }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
