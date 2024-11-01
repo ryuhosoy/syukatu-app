@@ -34,7 +34,6 @@ app.use(
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/posts", postsRoute);
 
 app.get("/", async (req, res) => {
   res.send("Hello, this is the server root!");
