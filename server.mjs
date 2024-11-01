@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import authRoute from "./routes/auth.mjs";
 import usersRoute from "./routes/users.mjs";
-import postsRoute from "./routes/posts.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
 import https from "https";
@@ -141,9 +140,7 @@ app.post("/api/chat", async (req, res) => {
       },
     ],
   });
-  //`${prompt}の会社情報として、「平均年収、就職難易度、面接で使える企業情報、売上(前期比も)、利益(前期比も)、店舗数、魅力、企業理念」を教えて。答えられるものだけでいい。答えられませんは避けて。できるだけ情報量、文字数は多くして。`
-  //`${prompt}の会社情報として、「何してる会社かを」200文字以内詳しく教えて。それ以外の文章は含まず。`
-  //`${prompt}の会社情報として、「強み：　、企業理念：　、求める人物：　」のように200文字以内で3つ教えて。それ以外の文章は含まず。`
+  
   console.log(completion.choices[0].message.content);
   res.send(completion.choices[0].message.content);
 });
