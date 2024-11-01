@@ -23,8 +23,14 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
     });
   };
 
-  const logout = async (e) => {
-    e.preventDefault();
+  const logout = async () => {
+    await logoutCall({
+      email: user.email,
+    }, dispatch);
+    navigate("/login");
+  };
+
+  const deleteAccount = async () => {
     await logoutCall({
       email: user.email,
     }, dispatch);
@@ -57,6 +63,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
         </div> */}
       </div>
       <button type="button" onClick={logout}>ログアウト</button>
+      <button type="button" onClick={deleteAccount}>アカウントを削除</button>
     </div>
   )
 }

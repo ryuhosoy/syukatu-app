@@ -5,9 +5,19 @@ import Login from "./pages/login/Login";
 import Register from "./pages/register/Register";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { AuthContext } from "./state/AuthContext";
+import axios from 'axios';
 
 function App() {
   const { user } = useContext(AuthContext);
+
+  const keepServerAlive = () => {
+    axios.get("https://syukatu-app-backend.onrender.com")
+      .catch((err) => {
+        console.error("Keep-alive request failed:", err);
+      });
+  };
+
+  setInterval(keepServerAlive, 60000);
 
   return (
     <>
