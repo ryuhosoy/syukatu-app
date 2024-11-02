@@ -58,7 +58,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
         <form onSubmit={handleSubmit}>
           <div className="searchbar">
             <Search className="searchIcon" />
-            <input type="text" className="searchInput" placeholder="知りたい会社はなんですか？" value={prompt} onChange={(e) => { setPrompt(e.target.value) }} />
+            <input type="text" className="searchInput" placeholder="知りたい会社名を入力しEnter！" value={prompt} onChange={(e) => { setPrompt(e.target.value) }} />
           </div>
         </form>
       </div>
