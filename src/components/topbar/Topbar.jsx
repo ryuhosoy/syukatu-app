@@ -31,17 +31,20 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
   };
 
   const deleteAccount = async () => {
-    axios.delete(`https://syukatu-app-backend.onrender.com/api/users/${user._id}`, {
-      data: {
-        userId: user._id,
-        isAdmin: user.isAdmin,
-      },
-    }).then(() => {
-      localStorage.removeItem("user");
-      navigate("/login");
-    }).catch((err) => {
+    await logoutCall({
+      email: user.email,
+    }, dispatch);
+
+    try {
+      await axios.delete(`https://syukatu-app-backend.onrender.com/api/users/${user._id}`, {
+        data: {
+          userId: user._id,
+          isAdmin: user.isAdmin,
+        },
+      });
+    } catch (err) {
       console.log(err);
-    });
+    }
   };
 
   const { user } = useContext(AuthContext);

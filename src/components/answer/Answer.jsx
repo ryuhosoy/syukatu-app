@@ -44,8 +44,10 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   const fetchFavoriteCompanies = async () => {
     try {
-      const res = await axios.get(`https://syukatu-app-backend.onrender.com/api/users/${user._id}/fetchFavoriteCompanies`);
-      setFavoriteCompanies(res.data);
+      if (localStorage.getItem("user")) {
+        const res = await axios.get(`https://syukatu-app-backend.onrender.com/api/users/${user._id}/fetchFavoriteCompanies`);
+        setFavoriteCompanies(res.data);
+      }
     } catch (err) {
       console.error(err);
     }
