@@ -24,6 +24,11 @@ router.put("/:id/addToFavoriteCompanies", async (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
+  console.log("req.body.userId", req.body.userId);
+  console.log("req.params.id", req.params.id);  
+  console.log("req.body.isAdmin", req.body.isAdmin);  
+
+  
   if (req.body.userId === req.params.id || req.body.isAdmin) {
     try {
       const user = await User.findByIdAndDelete(req.params.id);
