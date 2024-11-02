@@ -32,8 +32,10 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
 
   const deleteAccount = async () => {
     axios.delete(`https://syukatu-app-backend.onrender.com/api/users/${user._id}`, {
-      userId: user._id,
-      isAdmin: user.isAdmin,
+      data: {
+        userId: user._id,
+        isAdmin: user.isAdmin,
+      },
     }).then(() => {
       localStorage.removeItem("user");
       navigate("/login");
