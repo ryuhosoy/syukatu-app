@@ -1,5 +1,10 @@
+.welcomeText {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
 .Answer-wrp {
-  margin-top: 50px;
   padding: 30px;
   color: white;
 }
