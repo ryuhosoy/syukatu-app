@@ -10,6 +10,11 @@
   z-index: 100;
 }
 
+.topbarContainer button {
+  padding: 7px 10px;
+  margin-left: 15px;
+}
+
 .topbarLeft {
   flex: 3;
   text-align: left;

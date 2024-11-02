@@ -31,10 +31,15 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
   };
 
   const deleteAccount = async () => {
-    await logoutCall({
-      email: user.email,
-    }, dispatch);
-    navigate("/login");
+    axios.delete(`https://syukatu-app-backend.onrender.com/api/users/${user._id}`, {
+      userId: user._id,
+      isAdmin: user.isAdmin,
+    }).then(() => {
+      localStorage.removeItem("user");
+      navigate("/login");
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   const { user } = useContext(AuthContext);
