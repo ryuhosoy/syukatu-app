@@ -95,7 +95,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   return (
     <div className="Answer-wrp">
-      <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
+      <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！<br />会社をお気に入り登録すると最新のニュースを取得できます！</p>
       <div className="answer">
         <p className="answer-head">検索結果</p>
         {answerLoading ? <p>回答を作っています...</p> : <p className="company-detail">{response}</p>}
