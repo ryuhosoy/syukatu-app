@@ -25,7 +25,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
       setNews((prevNews) => ({
         ...prevNews,
-        [companyName]: res.data.news, // 会社ごとにニュースを保存
+        [companyName]: res.data.webPages, // 会社ごとにニュースを保存
       }));
     } catch (err) {
       console.error("ニュース取得エラー:", err);
@@ -117,8 +117,8 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
                 {news[object.companyName] ? (
                   news[object.companyName].value.map((news, i) => (
                     <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
-                      <p className="news-description">{news.description}</p>
-                      {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />}
+                      <p className="news-description">・　{news.snippet}</p>
+                      {/* {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />} */}
                     </a>
                   ))
                 ) : (
