@@ -1,5 +1,14 @@
 {
-  "rewrites":  [
-    {"source": "/(.*)", "destination": "/"}
+  "builds": [
+    {
+      "src": "dist/assets/index-IKPemcMU.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/assets/index-IKPemcMU.js"
+    }
   ]
 }
