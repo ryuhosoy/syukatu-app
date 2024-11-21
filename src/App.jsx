@@ -11,7 +11,7 @@ function App() {
   const { user } = useContext(AuthContext);
 
   const keepServerAlive = () => {
-    axios.get("https://syukatu-app-backend.onrender.com")
+    axios.get("https://syukatu-app.vercel.app")
       .catch((err) => {
         console.error("Keep-alive request failed:", err);
       });
