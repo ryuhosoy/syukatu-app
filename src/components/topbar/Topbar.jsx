@@ -14,7 +14,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setAnswerLoading(true);
-    axios.post("https://syukatu-app-backend.onrender.com/api/chat", { prompt }).then((res) => {
+    axios.post("https://syukatu-app.vercel.app/api/chat", { prompt }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -36,7 +36,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
     }, dispatch);
 
     try {
-      await axios.delete(`https://syukatu-app-backend.onrender.com/api/users/${user._id}`, {
+      await axios.delete(`https://syukatu-app.vercel.app/api/users/${user._id}`, {
         data: {
           userId: user._id,
           isAdmin: user.isAdmin,
