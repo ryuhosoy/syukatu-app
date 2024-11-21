@@ -1,14 +1,14 @@
 {
-  "builds": [
-    {
-      "src": "dist/assets/index-IKPemcMU.js",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "dist/assets/index-IKPemcMU.js"
-    }
-  ]
+    "builds": [
+        {
+            "src": "server.mjs",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "/"
+        }
+    ]
 }
