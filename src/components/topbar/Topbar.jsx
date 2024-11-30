@@ -1,15 +1,22 @@
 import { Chat, Notifications, Search } from "@mui/icons-material";
 import "./Topbar.css";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../state/AuthContext";
 import axios from "axios";
 import { logoutCall } from "../../actionCalls";
 import { useNavigate } from "react-router-dom";
 
 function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
+  const [searchCompanyName, setSearchCompanyName] = useState("");
+  const [resultCompaniesNames, setResultCompaniesNames] = useState([]);
+
   const { dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
+
+  // useEffect(第2引数[])でマウント時に毎回apiを叩く(mongodbのcompaniesからデータを取っきて、localstorageに入れとく)
+
+  // useEffect(第2引数[searchCompanyName])でsearchCompanyNameが変わるごとに毎回localstorageの会社から探し、その結果(point: どう結果を出すか?→その時点でのsearchCompanyNameを漢字で会社名に含む会社名をすべてsetResultCompaniesNamesに格納)をすべてsetResultCompaniesNamesに格納する
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -58,6 +65,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
         <form onSubmit={handleSubmit}>
           <div className="searchbar">
             <Search className="searchIcon" />
+            {/* onChangeでsetSearchCompanyNameに値を格納 */}
             <input type="text" className="searchInput" placeholder="知りたい会社名を入力しEnter！" value={prompt} onChange={(e) => { setPrompt(e.target.value) }} />
           </div>
         </form>
