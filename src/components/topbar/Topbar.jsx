@@ -5,23 +5,94 @@ import { AuthContext } from "../../state/AuthContext";
 import axios from "axios";
 import { logoutCall } from "../../actionCalls";
 import { useNavigate } from "react-router-dom";
+import Select from 'react-select';
+import { FixedSizeList } from "react-window";
 
-function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
+function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCompanyData }) {
   const [searchCompanyName, setSearchCompanyName] = useState("");
-  const [resultCompaniesNames, setResultCompaniesNames] = useState([]);
+  const [companiesData, setCompaniesData] = useState("");
+  const [companiesSelectData, setCompaniesSelectData] = useState([]);
 
   const { dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
   // useEffect(第2引数[])でマウント時に毎回apiを叩く(mongodbのcompaniesからデータを取っきて、localstorageに入れとく)
+  useEffect(() => {
+    fetchCompaniesData();
+  }, []);
 
-  // useEffect(第2引数[searchCompanyName])でsearchCompanyNameが変わるごとに毎回localstorageの会社から探し、その結果(point: どう結果を出すか?→その時点でのsearchCompanyNameを漢字で会社名に含む会社名をすべてsetResultCompaniesNamesに格納)をすべてsetResultCompaniesNamesに格納する
+  useEffect(() => {
+    reflectResult();
+  }, [searchCompanyName]);
+
+  const fetchCompaniesData = async () => {
+    try {
+      const res = await axios.get(`http://localhost:8080/api/companies/companiesData`);
+      const resCompaniesData = res.data;
+      console.log("res", resCompaniesData);
+      // localStorage.setItem("companiesData", JSON.stringify(res.data));
+      setCompaniesData(resCompaniesData);
+      // Select用のlabelとvalueを含んだ配列companiesSelectDataを作り、格納していく
+      setCompaniesSelectData(
+        resCompaniesData.map((resCompanyData) => {
+          return {
+            value: resCompanyData.companyName,
+            label: resCompanyData.companyName,
+          };
+        })
+      );
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // console.log(companiesSelectData);
+
+  // useEffect(第2引数[searchCompanyName])でsearchCompanyNameが変わるごとに毎回searchCompanyNameからlocalstorageの会社から探し、その結果(point: どう結果を出すか?→その時点でのsearchCompanyNameを漢字で会社名に含む会社名をすべてsetResultCompaniesNamesに格納)をすべてsetResultCompaniesNamesに格納する
+  // useEffect(() => {
+  //   const companiesData = JSON.parse(localStorage.getItem("companiesData"));
+  //   if (companiesData) {
+  //     const resultCompaniesData = companiesData.filter((companyData) => {
+  //       return companyData.companyName.indexOf(searchCompanyName) !== -1;
+  //     })
+  //     setResultCompaniesNames(resultCompaniesData);
+  //     // console.log("resultCompaniesData", resultCompaniesData);
+  //   }
+  // }, [searchCompanyName]);
+
+  const handleSetSearchCompanyName = (selectedOption) => {
+    setSearchCompanyName(selectedOption.label);
+    console.log("searchCompanyName", selectedOption.label);
+    giveCompanyNameToChat(selectedOption.label);
+  };
+
+  const giveCompanyNameToChat = (searchCompanyName) => {
+    console.log("searchCompanyName", searchCompanyName);
+    
+    setAnswerLoading(true);
+    axios.post("http://localhost:8080/api/chat", { prompt: searchCompanyName }).then((res) => {
+      setAnswerLoading(false);
+      setResponse(res.data);
+    }
+    ).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const reflectResult = () => {
+    if (companiesData) {
+      const resultCompanyData = companiesData.filter((companyData) => {
+        return companyData.companyName == searchCompanyName;
+      });
+      setResultCompanyData(resultCompanyData);
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setAnswerLoading(true);
-    axios.post("https://syukatu-app-backend.vercel.app/api/chat", { prompt }).then((res) => {
+    axios.post("http://localhost:8080/api/chat", { prompt }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -43,7 +114,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
     }, dispatch);
 
     try {
-      await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}`, {
+      await axios.delete(`http://localhost:8080/api/users/${user._id}`, {
         data: {
           userId: user._id,
           isAdmin: user.isAdmin,
@@ -54,6 +125,34 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
     }
   };
 
+  const MENU_LIST_ITEM_HEIGHT = 35;
+
+  function MenuList({ options, getValue, maxHeight, children }) {
+    if (!Array.isArray(children)) {
+      return null;
+    }
+
+    const [selectedOption] = getValue(); // 選択されているオプションを取得
+    const initialScrollOffset =
+      options.indexOf(selectedOption) * MENU_LIST_ITEM_HEIGHT; // 選択されたオプションのインデックスを使ってスクロール位置を計算
+
+    return (
+      <FixedSizeList
+        width="auto"
+        height={maxHeight}
+        itemCount={children.length}
+        itemSize={MENU_LIST_ITEM_HEIGHT}
+        initialScrollOffset={initialScrollOffset}
+      >
+        {({ index, style }) => (
+          <div style={style}>
+            {children[index]}
+          </div>
+        )}
+      </FixedSizeList>
+    );
+  }
+
   const { user } = useContext(AuthContext);
 
   return (
@@ -62,13 +161,18 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse }) {
         <span className="logo">就活支援</span>
       </div>
       <div className="topbarCenter">
-        <form onSubmit={handleSubmit}>
+        {/* <form onSubmit={handleSubmit}>
           <div className="searchbar">
             <Search className="searchIcon" />
-            {/* onChangeでsetSearchCompanyNameに値を格納 */}
-            <input type="text" className="searchInput" placeholder="知りたい会社名を入力しEnter！" value={prompt} onChange={(e) => { setPrompt(e.target.value) }} />
+            <input type="text" className="searchInput" placeholder="知りたい会社名を入力" value={searchCompanyName} onChange={(e) => { setSearchCompanyName(e.target.value) }} />
           </div>
-        </form>
+        </form> */}
+        <Select
+          options={companiesSelectData}
+          components={{ MenuList }}
+          onChange={handleSetSearchCompanyName}
+          placeholder="企業名を検索"
+        />
       </div>
       <div className="topbarRight">
         {/* <div className="topbarIconItem">

@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import authRoute from "./routes/auth.mjs";
 import usersRoute from "./routes/users.mjs";
+import companiesRoute from "./routes/companies.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
 import https from "https";
@@ -29,6 +30,7 @@ app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/companies", companiesRoute);
 
 app.get("/", async (req, res) => {
   console.log("Hello, this is the server root!");

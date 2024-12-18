@@ -2,9 +2,30 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../state/AuthContext";
 import "./Answer.css";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+} from "chart.js";
+import { Bar } from "react-chartjs-2";
 
-function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, answerLoading }) {
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData }) {
   const [news, setNews] = useState([]);
+
+  console.log("resultCompanyData", resultCompanyData);
 
   useEffect(() => {
     fetchFavoriteCompanies();
@@ -13,7 +34,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
   useEffect(() => {
     if (favoriteCompanies) {
       favoriteCompanies.forEach((company) => {
-        fetchNewsForCompany(company.companyName); // 各会社に対してニュースを取得
+        fetchNewsForCompany(company.companyName);
       });
     }
   }, [favoriteCompanies]);
@@ -25,7 +46,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
       setNews((prevNews) => ({
         ...prevNews,
-        [companyName]: res.data.webPages, // 会社ごとにニュースを保存
+        [companyName]: res.data.webPages,
       }));
     } catch (err) {
       console.error("ニュース取得エラー:", err);
@@ -93,6 +114,45 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     fetchFavoriteCompanies();
   };
 
+  let yearsLabels;
+  let netsales;
+
+  if (resultCompanyData[0]) {
+    yearsLabels = resultCompanyData[0].netsales.map((netsalesByYear) => (
+      netsalesByYear[0]
+    )).reverse();
+    netsales = resultCompanyData[0].netsales.map((netsalesByYear) => (
+      Number(netsalesByYear[1])
+    )).reverse();
+  }
+
+  console.log("yearsLabels", yearsLabels);
+  console.log("netsales", netsales);
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top"
+      },
+      title: {
+        display: true,
+        text: "売上の推移"
+      }
+    }
+  };
+
+  const barData = {
+    labels: yearsLabels,
+    datasets: [
+      {
+        label: "売上",
+        data: netsales,
+        backgroundColor: "rgba(53, 162, 235, 0.5)"
+      }
+    ]
+  };
+
   return (
     <div className="Answer-wrp">
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！<br />会社をお気に入り登録すると最新のニュースを取得できます！</p>
@@ -104,6 +164,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
             <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
           </div>
           : ""}
+        {resultCompanyData[0] ? <Bar options={options} data={barData} /> : ""}
       </div>
       <div className="favoriteCompanies-wrp">
         <p className="favoriteCompanies-head">お気に入り企業一覧</p>
@@ -118,7 +179,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
                   news[object.companyName].value.map((news, i) => (
                     <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
                       <p className="news-description">・　{news.snippet}</p>
-                      {/* {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />} */}
+                      {/* {/* {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />} */}
                     </a>
                   ))
                 ) : (
