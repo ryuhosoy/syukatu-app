@@ -95,6 +95,8 @@ app.post("/api/news", async (req, res) => {
   bingWebSearch(query);
 });
 
+// google map api key: AIzaSyD0C3aL0m4on5-6w5H3W1NawXPGHByZOjg
+
 const port = 8080;
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

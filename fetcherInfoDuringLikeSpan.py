@@ -121,8 +121,8 @@ class GetDocid:
         return merged_df
 
 
-start_date = datetime.date(2022, 4, 1)
-end_date = datetime.date(2024, 11, 30)
+start_date = datetime.date(2024, 3, 1)
+end_date = datetime.date(2024, 12, 22)
 
 gd = GetDocid(start_date, end_date)
 edinet_df = gd.create_docid_df("content-edinet")
@@ -138,7 +138,7 @@ from datetime import datetime
 def translate_period(report_end_date: str, duration: str) -> str:
     """duration を対応する日付情報に変換"""
     report_end_date_datetime = datetime.strptime(report_end_date, "%Y-%m-%d")
-    if duration == "CurrentYearDuration":
+    if duration == "CurrentYearInstant":
         return report_end_date_datetime.strftime("%Y-%m-%d")
     else:
         n_year = int(duration[5])
@@ -174,9 +174,7 @@ for docId in docid_list:
 
     # 一つずつのdocId(S-----)に対してjpcrpを名前に含むcsvファイルを読みこみ、jpcrp_cor:NetSalesSummaryOfBusinessResultsのCurrentYearDurationをprintする
 
-    xbrl_expression = (
-        f"content-edinet/financial_zip_files/{docID}/XBRL_TO_CSV/jpcrp*"
-    )
+    xbrl_expression = f"content-edinet/financial_zip_files/{docID}/XBRL_TO_CSV/jpcrp*"
     xbrl_paths = glob(xbrl_expression, recursive=True)
     print(xbrl_paths)
     # print(xbrl_paths[0])
@@ -191,29 +189,88 @@ for docId in docid_list:
     # print(df)
 
     # 読み込み済みのデータフレームから、指定された要素IDの行のみを取得
-    target_element_id = "jpcrp_cor:NetSalesSummaryOfBusinessResults"
-    filtered_df_element = df[df["要素ID"] == target_element_id]
+    target_element_id_averageAge = "jpcrp_cor:AverageAgeYearsInformationAboutReportingCompanyInformationAboutEmployees"  # ok
+    target_element_id_averageLengthOfService = "jpcrp_cor:AverageLengthOfServiceYearsInformationAboutReportingCompanyInformationAboutEmployees"  # ok
+    target_element_id_averageAnnualSalary = "jpcrp_cor:AverageAnnualSalaryInformationAboutReportingCompanyInformationAboutEmployees"  # ok
+    target_element_id_numberOfEmployees = "jpcrp_cor:NumberOfEmployees"  # ok
+    target_element_id_descriptionOfBusiness = (
+        "jpcrp_cor:DescriptionOfBusinessTextBlock"  # ok
+    )
+    target_element_id_representativeName = (
+        "jpcrp_cor:TitleAndNameOfRepresentativeCoverPage"  # ok
+    )
+
+    filtered_df_element_averageAge = df[df["要素ID"] == target_element_id_averageAge]
+    filtered_df_element_averageLengthOfService = df[
+        df["要素ID"] == target_element_id_averageLengthOfService
+    ]
+    filtered_df_element_averageAnnualSalary = df[
+        df["要素ID"] == target_element_id_averageAnnualSalary
+    ]
+    filtered_df_element_descriptionOfBusiness = df[
+        df["要素ID"] == target_element_id_descriptionOfBusiness
+    ]
+    filtered_df_element_representativeName = df[
+        df["要素ID"] == target_element_id_representativeName
+    ]
+
+    print(
+        "averageAge",
+        filtered_df_element_averageAge["値"].tolist()[0]
+        if filtered_df_element_averageAge["値"].tolist()
+        else "None",
+    )
+    print(
+        "averageLengthOfService",
+        filtered_df_element_averageLengthOfService["値"].tolist()[0]
+        if filtered_df_element_averageLengthOfService["値"].tolist()
+        else "None",
+    )
+    print(
+        "averageAnnualSalary",
+        filtered_df_element_averageAnnualSalary["値"].tolist()[0]
+        if filtered_df_element_averageAnnualSalary["値"].tolist()
+        else "None",
+    )
+    print(
+        "descriptionOfBusiness",
+        filtered_df_element_descriptionOfBusiness["値"].tolist()[0]
+        if filtered_df_element_descriptionOfBusiness["値"].tolist()
+        else "None",
+    )
+    print(
+        "representativeName",
+        filtered_df_element_representativeName["値"].tolist()[0]
+        if filtered_df_element_representativeName["値"].tolist()
+        else "None",
+    )
 
     # 結果を表示
     # print("all of result", filtered_df_element)
 
     durations = [
-        "CurrentYearDuration",
-        "Prior1YearDuration",
-        "Prior2YearDuration",
-        "Prior3YearDuration",
-        "Prior4YearDuration",
+        "CurrentYearInstant",
+        "Prior1YearInstant",
+        "Prior2YearInstant",
+        "Prior3YearInstant",
+        "Prior4YearInstant",
     ]
 
+    company_numberOfEmployees_dict = {}
     company_netsales_dict = {}
 
-    # 会社ごとの売り上げをfiltered_df_elementからdurationごとに取得
+    # 会社ごとの売り上げをdurationごとに取得
     for duration in durations:
         target_context_id = duration
-        filtered_df_netsales = df[
-            (df["要素ID"] == target_element_id)
+        filtered_df_numberOfEmployees = df[
+            (df["要素ID"] == target_element_id_numberOfEmployees)
             & (df["コンテキストID"] == target_context_id)
         ]
+
+        # filtered_df_netsales = df[
+        #     (df["要素ID"] == target_element_id_netsales)
+        #     & (df["コンテキストID"] == target_context_id)
+        # ]
 
         # key = "jpcrp_cor:CurrentFiscalYearEndDateDEI"、context_ref = "FilingDateInstant"のデータを取得し、report_end_dateとして日付を取得
         target_element_id_CFYEDD = "jpdei_cor:CurrentFiscalYearEndDateDEI"
@@ -230,31 +287,43 @@ for docId in docid_list:
 
         print(
             translate_period(report_end_date[0], duration) + ":",
-            filtered_df_netsales["値"].tolist()[0]
-            if filtered_df_netsales["値"].tolist()
-            and "－" not in filtered_df_netsales["値"].tolist()
+            filtered_df_numberOfEmployees["値"].tolist()[0]
+            if filtered_df_numberOfEmployees["値"].tolist()
+            and "－" not in filtered_df_numberOfEmployees["値"].tolist()
             else "None",
         )
         # {CurrentYearDuration: 22121}のように辞書に追加していく
-        company_netsales_dict[translate_period(report_end_date[0], duration)] = (
-            filtered_df_netsales["値"].tolist()[0]
-            if filtered_df_netsales["値"].tolist()
-            and "－" not in filtered_df_netsales["値"].tolist()
+        company_numberOfEmployees_dict[
+            translate_period(report_end_date[0], duration)
+        ] = (
+            filtered_df_numberOfEmployees["値"].tolist()[0]
+            if filtered_df_numberOfEmployees["値"].tolist()
+            and "－" not in filtered_df_numberOfEmployees["値"].tolist()
             else "None"
         )
 
-    print("company_netsales_dict", company_netsales_dict)
+    print("company_numberOfEmployees_dict", company_numberOfEmployees_dict)
 
     # [[日付, 売り上げ値], [日付, 売り上げ値], [日付, 売り上げ値]]の配列を作り、mongodbのcompanyNameに入れる
-    netsalesForInsertToDB  = [
-        [None for _ in range(2)] for _ in range(len(company_netsales_dict))
+    numberOfEmployeesForInsertToDB = [
+        [None for _ in range(2)] for _ in range(len(company_numberOfEmployees_dict))
     ]
     count = 0
-    for key, value in company_netsales_dict.items():
+    for key, value in company_numberOfEmployees_dict.items():
+        numberOfEmployeesForInsertToDB[count][0] = key
+        numberOfEmployeesForInsertToDB[count][1] = value
+        count += 1
+    print("numberOfEmployeesForInsertToDB", numberOfEmployeesForInsertToDB)
+
+    netsalesForInsertToDB = [
+        [None for _ in range(2)] for _ in range(len(company_numberOfEmployees_dict))
+    ]
+    count = 0
+    for key, value in company_numberOfEmployees_dict.items():
         netsalesForInsertToDB[count][0] = key
         netsalesForInsertToDB[count][1] = value
         count += 1
-    print("netsalesForInsertToDB", netsalesForInsertToDB)
+    print("numberOfEmployeesForInsertToDB", netsalesForInsertToDB)
 
     try:
         # companiesにはそれぞれ会社名、売り上げ、オフィス場所などが格納されている
@@ -270,11 +339,65 @@ for docId in docid_list:
         if companies.find_one({"companyName": companyName}):
             companies.update_one(
                 {"companyName": companyName},
-                {"$set": {"netsales": netsalesForInsertToDB}},
+                # {"$set": {"netsales": netsalesForInsertToDB}},
+                {
+                    "$set": {
+                        "averageAge": filtered_df_element_averageAge["値"].tolist()[0]
+                        if filtered_df_element_averageAge["値"].tolist()
+                        else "None",
+                        "averageLengthOfService": filtered_df_element_averageLengthOfService[
+                            "値"
+                        ].tolist()[0]
+                        if filtered_df_element_averageLengthOfService["値"].tolist()
+                        else "None",
+                        "averageAnnualSalary": filtered_df_element_averageAnnualSalary[
+                            "値"
+                        ].tolist()[0]
+                        if filtered_df_element_averageAnnualSalary["値"].tolist()
+                        else "None",
+                        "descriptionOfBusiness": filtered_df_element_descriptionOfBusiness[
+                            "値"
+                        ].tolist()[0]
+                        if filtered_df_element_descriptionOfBusiness["値"].tolist()
+                        else "None",
+                        "representativeName": filtered_df_element_representativeName[
+                            "値"
+                        ].tolist()[0]
+                        if filtered_df_element_representativeName["値"].tolist()
+                        else "None",
+                        "numberOfEmployees": numberOfEmployeesForInsertToDB,
+                    }
+                },
             )
         else:
             companies.insert_one(
-                {"companyName": companyName, "netsales": netsalesForInsertToDB}
+                {
+                    "companyName": companyName,
+                    "averageAge": filtered_df_element_averageAge["値"].tolist()[0]
+                    if filtered_df_element_averageAge["値"].tolist()
+                    else "None",
+                    "averageLengthOfService": filtered_df_element_averageLengthOfService[
+                        "値"
+                    ].tolist()[0]
+                    if filtered_df_element_averageLengthOfService["値"].tolist()
+                    else "None",
+                    "averageAnnualSalary": filtered_df_element_averageAnnualSalary[
+                        "値"
+                    ].tolist()[0]
+                    if filtered_df_element_averageAnnualSalary["値"].tolist()
+                    else "None",
+                    "descriptionOfBusiness": filtered_df_element_descriptionOfBusiness[
+                        "値"
+                    ].tolist()[0]
+                    if filtered_df_element_descriptionOfBusiness["値"].tolist()
+                    else "None",
+                    "representativeName": filtered_df_element_representativeName[
+                        "値"
+                    ].tolist()[0]
+                    if filtered_df_element_representativeName["値"].tolist()
+                    else "None",
+                    "numberOfEmployees": numberOfEmployeesForInsertToDB,
+                }
             )
 
     except Exception as e:

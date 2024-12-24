@@ -12,6 +12,11 @@ import {
   Legend
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
+import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'
+import {
+  setDefaults,
+  fromAddress,
+} from "react-geocode";
 
 ChartJS.register(
   CategoryScale,
@@ -22,8 +27,49 @@ ChartJS.register(
   Legend
 );
 
+setDefaults({
+  key: "AIzaSyD0C3aL0m4on5-6w5H3W1NawXPGHByZOjg",
+  language: "jp",
+  region: "jp",
+});
+
 function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData }) {
   const [news, setNews] = useState([]);
+  const [resultComLocation, setResultComLocation] = useState(null);
+  const [resultComLat, setResultComLat] = useState("");
+  const [resultComLng, setResultComLng] = useState("");
+
+  useEffect(() => {
+    if (resultCompanyData[0]?.location) {
+      setResultComLocation(resultCompanyData[0].location)
+      console.log("resultCompanyData location is changed", resultCompanyData[0].location);
+    }
+  }, [resultCompanyData]);
+
+  const center = {
+    lat: resultComLat, lng: resultComLng
+  }
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyD0C3aL0m4on5-6w5H3W1NawXPGHByZOjg',
+  })
+
+  if (resultComLocation) {
+    fromAddress(resultComLocation)
+      .then(({ results }) => {
+        const { lat, lng } = results[0].geometry.location;
+        console.log(lat, lng);
+        setResultComLat(lat);
+        setResultComLng(lng);
+      })
+      .catch(console.error);
+  }
+
+  const containerStyle = {
+    width: '100%',
+    height: '400px',
+  }
 
   console.log("resultCompanyData", resultCompanyData);
 
@@ -114,22 +160,34 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     fetchFavoriteCompanies();
   };
 
-  let yearsLabels;
+  let netsalesYearsLabels;
   let netsales;
+  let numOfEmployeesYearsLabels;
+  let numOfEmployees;
 
   if (resultCompanyData[0]) {
-    yearsLabels = resultCompanyData[0].netsales.map((netsalesByYear) => (
-      netsalesByYear[0]
-    )).reverse();
-    netsales = resultCompanyData[0].netsales.map((netsalesByYear) => (
-      Number(netsalesByYear[1])
-    )).reverse();
+    if (resultCompanyData[0]?.netsales) {
+      netsalesYearsLabels = resultCompanyData[0].netsales.map((netsalesByYear) => (
+        netsalesByYear[0]
+      )).reverse();
+      netsales = resultCompanyData[0].netsales.map((netsalesByYear) => (
+        Number(netsalesByYear[1])
+      )).reverse();
+    }
+    if (resultCompanyData[0]?.numberOfEmployees) {
+      numOfEmployeesYearsLabels = resultCompanyData[0].numberOfEmployees.map((numberOfEmployeesByYear) => (
+        numberOfEmployeesByYear[0]
+      )).reverse();
+      numOfEmployees = resultCompanyData[0].numberOfEmployees.map((numberOfEmployeesByYear) => (
+        Number(numberOfEmployeesByYear[1])
+      )).reverse();
+    }
   }
 
-  console.log("yearsLabels", yearsLabels);
+  console.log("netsalesYearsLabels", netsalesYearsLabels);
   console.log("netsales", netsales);
 
-  const options = {
+  const netsalesOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -142,8 +200,8 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     }
   };
 
-  const barData = {
-    labels: yearsLabels,
+  const netsalesBarData = {
+    labels: netsalesYearsLabels,
     datasets: [
       {
         label: "売上",
@@ -153,18 +211,59 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     ]
   };
 
+  const numOfEmployeesOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top"
+      },
+      title: {
+        display: true,
+        text: "従業員数の推移"
+      }
+    }
+  };
+
+  const numOfEmployeesBarData = {
+    labels: numOfEmployeesYearsLabels,
+    datasets: [
+      {
+        label: "従業員数",
+        data: numOfEmployees,
+        backgroundColor: "rgba(235, 147, 53, 0.5)"
+      }
+    ]
+  };
+
   return (
     <div className="Answer-wrp">
-      <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！<br />会社をお気に入り登録すると最新のニュースを取得できます！</p>
+      <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
       <div className="answer">
-        <p className="answer-head">検索結果</p>
-        {answerLoading ? <p>回答を作っています...</p> : <p className="company-detail">{response}</p>}
+        {!answerLoading && response ? <p className="answer-head">AIによる企業概要説明</p> : ""}
+        {answerLoading ? <p>AIによる企業概要を作成中...</p> : <p className="company-detail">{response}</p>}
         {response ?
           <div>
             <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
           </div>
           : ""}
-        {resultCompanyData[0] ? <Bar options={options} data={barData} /> : ""}
+        {netsalesYearsLabels && netsales ? <Bar options={netsalesOptions} data={netsalesBarData} /> : ""}
+        {numOfEmployeesYearsLabels && numOfEmployees ? <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} /> : ""}
+        {resultCompanyData?.[0]?.averageAge ? <p>平均年齢：{resultCompanyData[0].averageAge}</p> : ""}
+        {resultCompanyData?.[0]?.averageAnnualSalary ? <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}</p> : ""}
+        {resultCompanyData?.[0]?.averageLengthOfService ? <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}</p> : ""}
+        {resultCompanyData?.[0]?.descriptionOfBusiness ? <p>{resultCompanyData[0].descriptionOfBusiness}</p> : ""}
+        {resultCompanyData?.[0]?.location ? <p>所在地：{resultCompanyData[0].location}</p> : ""}
+        {isLoaded && resultComLat && resultComLng ? (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={15}
+          >
+            <Marker position={center} />
+          </GoogleMap>
+        ) : (
+          <></>
+        )}
       </div>
       <div className="favoriteCompanies-wrp">
         <p className="favoriteCompanies-head">お気に入り企業一覧</p>
