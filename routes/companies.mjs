@@ -3,7 +3,6 @@ import mongodb from "mongodb";
 import env from "dotenv";
 
 env.config();
-
 const router = express.Router();
 const MongoClient = mongodb.MongoClient;
 
