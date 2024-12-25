@@ -28,7 +28,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
 
   const fetchCompaniesData = async () => {
     try {
-      const res = await axios.get(`http://localhost:8080/api/companies/companiesData`);
+      const res = await axios.get(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesData`);
       const resCompaniesData = res.data;
       console.log("res", resCompaniesData);
       // localStorage.setItem("companiesData", JSON.stringify(res.data));
@@ -71,7 +71,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
     console.log("searchCompanyName", searchCompanyName);
     
     setAnswerLoading(true);
-    axios.post("http://localhost:8080/api/chat", { prompt: searchCompanyName }).then((res) => {
+    axios.post("https://syukatu-app-new-backend.vercel.app/api/chat", { prompt: searchCompanyName }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -92,7 +92,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
   const handleSubmit = (e) => {
     e.preventDefault();
     setAnswerLoading(true);
-    axios.post("http://localhost:8080/api/chat", { prompt }).then((res) => {
+    axios.post("https://syukatu-app-new-backend.vercel.app/api/chat", { prompt }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -114,7 +114,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
     }, dispatch);
 
     try {
-      await axios.delete(`http://localhost:8080/api/users/${user._id}`, {
+      await axios.delete(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}`, {
         data: {
           userId: user._id,
           isAdmin: user.isAdmin,
