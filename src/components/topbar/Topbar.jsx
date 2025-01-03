@@ -8,10 +8,11 @@ import { useNavigate } from "react-router-dom";
 import Select from 'react-select';
 import { FixedSizeList } from "react-window";
 
-function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCompanyData }) {
+function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo }) {
   const [searchCompanyName, setSearchCompanyName] = useState("");
   const [companiesData, setCompaniesData] = useState("");
   const [companiesSelectData, setCompaniesSelectData] = useState([]);
+  const [searchCorporateNumber, setSearchCorporateNumber] = useState("");
 
   const { dispatch } = useContext(AuthContext);
 
@@ -24,13 +25,20 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
 
   useEffect(() => {
     reflectResult();
+    if (searchCompanyName) {
+      fetchSearchCorporateNumber();
+    }
   }, [searchCompanyName]);
+
+  useEffect(() => {
+    fetchCompaniesWorkplaceInfo();
+  }, [searchCorporateNumber]);
 
   const fetchCompaniesData = async () => {
     try {
-      const res = await axios.get(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesData`);
+      const res = await axios.get(`http://localhost:8080/api/companies/companiesData`);
       const resCompaniesData = res.data;
-      console.log("res", resCompaniesData);
+      // console.log("res", resCompaniesData);
       // localStorage.setItem("companiesData", JSON.stringify(res.data));
       setCompaniesData(resCompaniesData);
       // Select用のlabelとvalueを含んだ配列companiesSelectDataを作り、格納していく
@@ -46,6 +54,21 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
       console.error(err);
     }
   }
+
+  const fetchSearchCorporateNumber = async () => {
+    const res = await axios.post(`http://localhost:8080/api/companies/corporateNumber`, { corporateName: searchCompanyName });
+    console.log("fetchSearchCorporateNumber", res.data["hojin-infos"][0]);
+    const corporateNumber = res.data["hojin-infos"][0].corporate_number
+    console.log("corporateNumber", corporateNumber);
+    setSearchCorporateNumber(corporateNumber);
+  };
+
+  // その後その法人番号で職場情報を得るapiを叩いて職場情報を得る。
+  const fetchCompaniesWorkplaceInfo = async () => {
+    const res = await axios.post(`http://localhost:8080/api/companies/companiesWorkplaceInfo`, { corporateNumber: searchCorporateNumber });
+    console.log("fetchCompaniesWorkplaceInfo", res.data["hojin-infos"][0].workplace_info);
+    setCompanyWorkplaceInfo(res.data["hojin-infos"][0].workplace_info);
+  };
 
   // console.log(companiesSelectData);
 
@@ -63,15 +86,15 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
 
   const handleSetSearchCompanyName = (selectedOption) => {
     setSearchCompanyName(selectedOption.label);
-    console.log("searchCompanyName", selectedOption.label);
+    // console.log("searchCompanyName", selectedOption.label);
     giveCompanyNameToChat(selectedOption.label);
   };
 
   const giveCompanyNameToChat = (searchCompanyName) => {
-    console.log("searchCompanyName", searchCompanyName);
-    
+    // console.log("searchCompanyName", searchCompanyName);
+
     setAnswerLoading(true);
-    axios.post("https://syukatu-app-new-backend.vercel.app/api/chat", { prompt: searchCompanyName }).then((res) => {
+    axios.post("http://localhost:8080/api/chat", { prompt: searchCompanyName }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -89,18 +112,6 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setAnswerLoading(true);
-    axios.post("https://syukatu-app-new-backend.vercel.app/api/chat", { prompt }).then((res) => {
-      setAnswerLoading(false);
-      setResponse(res.data);
-    }
-    ).catch((err) => {
-      console.log(err);
-    });
-  };
-
   const logout = async () => {
     await logoutCall({
       email: user.email,
@@ -114,7 +125,7 @@ function Topbar({ prompt, setPrompt, setAnswerLoading, setResponse, setResultCom
     }, dispatch);
 
     try {
-      await axios.delete(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}`, {
+      await axios.delete(`http://localhost:8080/api/users/${user._id}`, {
         data: {
           userId: user._id,
           isAdmin: user.isAdmin,

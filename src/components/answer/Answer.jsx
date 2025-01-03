@@ -9,9 +9,10 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ArcElement,
 } from "chart.js";
-import { Bar } from "react-chartjs-2";
+import { Bar, Pie } from "react-chartjs-2";
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api'
 import {
   setDefaults,
@@ -22,6 +23,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -33,7 +35,7 @@ setDefaults({
   region: "jp",
 });
 
-function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData }) {
+function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData, companyWorkplaceInfo }) {
   const [news, setNews] = useState([]);
   const [resultComLocation, setResultComLocation] = useState(null);
   const [resultComLat, setResultComLat] = useState("");
@@ -42,7 +44,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
   useEffect(() => {
     if (resultCompanyData[0]?.location) {
       setResultComLocation(resultCompanyData[0].location)
-      console.log("resultCompanyData location is changed", resultCompanyData[0].location);
+      // console.log("resultCompanyData location is changed", resultCompanyData[0].location);
     }
   }, [resultCompanyData]);
 
@@ -59,7 +61,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     fromAddress(resultComLocation)
       .then(({ results }) => {
         const { lat, lng } = results[0].geometry.location;
-        console.log(lat, lng);
+        // console.log(lat, lng);
         setResultComLat(lat);
         setResultComLng(lng);
       })
@@ -71,7 +73,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     height: '400px',
   }
 
-  console.log("resultCompanyData", resultCompanyData);
+  // console.log("resultCompanyData", resultCompanyData);
 
   useEffect(() => {
     fetchFavoriteCompanies();
@@ -87,8 +89,8 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   const fetchNewsForCompany = async (companyName) => {
     try {
-      const res = await axios.post(`https://syukatu-app-backend.vercel.app/api/news`, { companyName });
-      console.log("res", res);
+      const res = await axios.post(`http://localhost:8080/api/news`, { companyName });
+      // console.log("res", res);
 
       setNews((prevNews) => ({
         ...prevNews,
@@ -99,7 +101,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     }
   };
 
-  console.log("news", news);
+  // console.log("news", news);
 
   const deleteNewsForCompany = (companyName) => {
     setNews((prevNews) => {
@@ -112,7 +114,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
   const fetchFavoriteCompanies = async () => {
     try {
       if (localStorage.getItem("user")) {
-        const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
+        const res = await axios.get(`http://localhost:8080/api/users/${user._id}/fetchFavoriteCompanies`);
         setFavoriteCompanies(res.data);
       }
     } catch (err) {
@@ -124,12 +126,12 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
 
   const addToFavoriteCompanies = async () => {
     const addFavoriteCompanyContent = {
-      companyName: prompt,
+      companyName: resultCompanyData[0].companyName,
       companyAbout: response,
     };
 
     try {
-      await axios.put(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
+      await axios.put(`http://localhost:8080/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
     } catch (err) {
       console.log(err);
     }
@@ -146,7 +148,7 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     console.log("deleteFavoriteCompanyContent", deleteFavoriteCompanyContent);
 
     try {
-      await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
+      await axios.delete(`http://localhost:8080/api/users/${user._id}/deleteFromFavoriteCompanies`, {
         data: {
           userId: user._id,
           deleteFavoriteCompanyContent,
@@ -184,8 +186,8 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     }
   }
 
-  console.log("netsalesYearsLabels", netsalesYearsLabels);
-  console.log("netsales", netsales);
+  // console.log("netsalesYearsLabels", netsalesYearsLabels);
+  // console.log("netsales", netsales);
 
   const netsalesOptions = {
     responsive: true,
@@ -235,6 +237,50 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
     ]
   };
 
+  let maleWorkersProportion;
+  let femaleWorkersProportion;
+
+  if (companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion) {
+    femaleWorkersProportion = companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion;
+    maleWorkersProportion = 100 - femaleWorkersProportion;
+  }
+
+  const sexProportionData = {
+    labels: ["男性", "女性"],
+    datasets: [
+      {
+        label: "従業員の性別の割合",
+        data: [maleWorkersProportion, femaleWorkersProportion],
+        backgroundColor: [
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 99, 132, 1)",
+        ],
+        borderColor: [
+          "rgba(255, 99, 132, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
+        ],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const sexProportionOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: "top", // 凡例の位置
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            const value = context.raw; // データの値
+            return `${context.label}: ${value}%`; // %を追加
+          },
+        },
+      },
+    },
+  };
+
   return (
     <div className="Answer-wrp">
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
@@ -251,6 +297,14 @@ function Answer({ prompt, response, favoriteCompanies, setFavoriteCompanies, ans
         {resultCompanyData?.[0]?.averageAge ? <p>平均年齢：{resultCompanyData[0].averageAge}</p> : ""}
         {resultCompanyData?.[0]?.averageAnnualSalary ? <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}</p> : ""}
         {resultCompanyData?.[0]?.averageLengthOfService ? <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}</p> : ""}
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female ? <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}</p> : ""}
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male ? <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}</p> : ""}
+        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion ? <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}</p> : ""}
+        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion ? (
+          <div className="Pie-chart-wrp">
+            <Pie data={sexProportionData} options={sexProportionOptions} />
+          </div>
+        ) : ""}
         {resultCompanyData?.[0]?.descriptionOfBusiness ? <p>{resultCompanyData[0].descriptionOfBusiness}</p> : ""}
         {resultCompanyData?.[0]?.location ? <p>所在地：{resultCompanyData[0].location}</p> : ""}
         {isLoaded && resultComLat && resultComLng ? (

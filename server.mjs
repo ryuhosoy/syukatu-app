@@ -52,7 +52,7 @@ app.post("/api/chat", async (req, res) => {
     ],
   });
   
-  console.log(completion.choices[0].message.content);
+  // console.log(completion.choices[0].message.content);
   res.send(completion.choices[0].message.content);
 });
 
