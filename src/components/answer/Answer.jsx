@@ -73,7 +73,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     height: '400px',
   }
 
-  // console.log("resultCompanyData", resultCompanyData);
+  console.log("resultCompanyData", resultCompanyData);
 
   useEffect(() => {
     fetchFavoriteCompanies();
@@ -89,7 +89,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
 
   const fetchNewsForCompany = async (companyName) => {
     try {
-      const res = await axios.post(`http://localhost:8080/api/news`, { companyName });
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/news`, { companyName });
       // console.log("res", res);
 
       setNews((prevNews) => ({
@@ -114,7 +114,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const fetchFavoriteCompanies = async () => {
     try {
       if (localStorage.getItem("user")) {
-        const res = await axios.get(`http://localhost:8080/api/users/${user._id}/fetchFavoriteCompanies`);
+        const res = await axios.get(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
         setFavoriteCompanies(res.data);
       }
     } catch (err) {
@@ -131,7 +131,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     };
 
     try {
-      await axios.put(`http://localhost:8080/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
+      await axios.put(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
     } catch (err) {
       console.log(err);
     }
@@ -148,7 +148,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     console.log("deleteFavoriteCompanyContent", deleteFavoriteCompanyContent);
 
     try {
-      await axios.delete(`http://localhost:8080/api/users/${user._id}/deleteFromFavoriteCompanies`, {
+      await axios.delete(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
         data: {
           userId: user._id,
           deleteFavoriteCompanyContent,
@@ -186,8 +186,8 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     }
   }
 
-  // console.log("netsalesYearsLabels", netsalesYearsLabels);
-  // console.log("netsales", netsales);
+  console.log("netsalesYearsLabels", netsalesYearsLabels);
+  console.log("netsales", netsales);
 
   const netsalesOptions = {
     responsive: true,
@@ -292,21 +292,21 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
             <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
           </div>
           : ""}
-        {netsalesYearsLabels && netsales ? <Bar options={netsalesOptions} data={netsalesBarData} /> : ""}
-        {numOfEmployeesYearsLabels && numOfEmployees ? <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} /> : ""}
-        {resultCompanyData?.[0]?.averageAge ? <p>平均年齢：{resultCompanyData[0].averageAge}</p> : ""}
-        {resultCompanyData?.[0]?.averageAnnualSalary ? <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}</p> : ""}
-        {resultCompanyData?.[0]?.averageLengthOfService ? <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}</p> : ""}
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female ? <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}</p> : ""}
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male ? <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}</p> : ""}
-        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion ? <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}</p> : ""}
-        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion ? (
+        {netsalesYearsLabels && netsales && netsales.some(item => item) ? <Bar options={netsalesOptions} data={netsalesBarData} /> : "売上のデータがありません"}
+        {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} /> : <p>従業員数のデータがありません</p>}
+        {resultCompanyData?.[0]?.averageAge && resultCompanyData?.[0]?.averageAge != "None" ? <p>平均年齢：{resultCompanyData[0].averageAge}歳</p> : "平均年齢のデータがありません"}
+        {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary != "None" ? <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}円</p> : <p>平均年間給与のデータがありません</p>}
+        {resultCompanyData?.[0]?.averageLengthOfService && resultCompanyData?.[0]?.averageLengthOfService != "None" ? <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}年</p> : <p>平均勤続年数のデータがありません</p>}
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female && companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female != "None" ? <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}年</p> : <p>女性従業員の平均勤続年数のデータがありません</p>}
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male && companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male != "None" ? <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}年</p> : <p>男性従業員の平均勤続年数のデータがありません</p>}
+        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion && companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion != "None" ? <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}％</p> : <p>女性従業員の割合のデータがありません</p>}
+        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion && companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion != "None" ? (
           <div className="Pie-chart-wrp">
             <Pie data={sexProportionData} options={sexProportionOptions} />
           </div>
-        ) : ""}
-        {resultCompanyData?.[0]?.descriptionOfBusiness ? <p>{resultCompanyData[0].descriptionOfBusiness}</p> : ""}
-        {resultCompanyData?.[0]?.location ? <p>所在地：{resultCompanyData[0].location}</p> : ""}
+        ) : <p>従業員の性別の割合のデータがありません</p>}
+        {resultCompanyData?.[0]?.descriptionOfBusiness ? <p>{resultCompanyData[0].descriptionOfBusiness}</p> : <p>事業概要のデータがありません</p>}
+        {resultCompanyData?.[0]?.location ? <p>所在地：{resultCompanyData[0].location}</p> : <p>所在地のデータがありません</p>}
         {isLoaded && resultComLat && resultComLng ? (
           <GoogleMap
             mapContainerStyle={containerStyle}
@@ -315,9 +315,8 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
           >
             <Marker position={center} />
           </GoogleMap>
-        ) : (
-          <></>
-        )}
+        ) : <p>GoogleMapを表示できません</p>
+        }
       </div>
       <div className="favoriteCompanies-wrp">
         <p className="favoriteCompanies-head">お気に入り企業一覧</p>
