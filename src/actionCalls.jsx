@@ -12,7 +12,7 @@ export const loginCall = async (user, dispatch) => {
 
 export const logoutCall = async (user, dispatch) => {
   try {
-    await axios.put("https://syukatu-app-new-backend.vercel.appapi/auth/logout", user);
+    await axios.put("https://syukatu-app-new-backend.vercel.app/api/auth/logout", user);
     dispatch({ type: "LOGOUT" });
   } catch (err) {
     console.log(err);
