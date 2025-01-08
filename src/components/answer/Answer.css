@@ -72,3 +72,9 @@
   width: 30%;
   margin: 0 auto;
 }
+
+@media (max-width: 768px) {
+  .Answer-wrp {
+    margin-top: 170px;
+  }
+}

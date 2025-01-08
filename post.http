@@ -50,7 +50,7 @@ Content-Type: application/json
 GET  https://syukatu-app-new-backend.vercel.app/api/users/66de8be96220fa7ae95133f4
 
 ###
-PUT  https://syukatu-app-new-backend.vercel.app/api/users/66e12cf2cbf45d65dad040ad/follow
+PUT  http://localhost:8080/api/users/66e12cf2cbf45d65dad040ad/follow
 Content-Type: application/json
 
 {

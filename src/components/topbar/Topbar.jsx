@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Select from 'react-select';
 import { FixedSizeList } from "react-window";
 
-function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo }) {
+function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo, netsalesPromptForChat }) {
   const [searchCompanyName, setSearchCompanyName] = useState("");
   const [companiesData, setCompaniesData] = useState("");
   const [companiesSelectData, setCompaniesSelectData] = useState([]);
@@ -58,18 +58,26 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
   }
 
   const fetchSearchCorporateNumber = async () => {
-    const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/corporateNumber`, { corporateName: searchCompanyName });
-    console.log("fetchSearchCorporateNumber", res.data["hojin-infos"][0]);
-    const corporateNumber = res.data["hojin-infos"][0].corporate_number
-    console.log("corporateNumber", corporateNumber);
-    setSearchCorporateNumber(corporateNumber);
+    try {
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/corporateNumber`, { corporateName: searchCompanyName });
+      console.log("fetchSearchCorporateNumber", res.data["hojin-infos"][0]);
+      const corporateNumber = res.data["hojin-infos"][0].corporate_number
+      console.log("corporateNumber", corporateNumber);
+      setSearchCorporateNumber(corporateNumber);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // その後その法人番号で職場情報を得るapiを叩いて職場情報を得る。
   const fetchCompaniesWorkplaceInfo = async () => {
-    const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesWorkplaceInfo`, { corporateNumber: searchCorporateNumber });
-    console.log("fetchCompaniesWorkplaceInfo", res.data["hojin-infos"][0].workplace_info);
-    setCompanyWorkplaceInfo(res.data["hojin-infos"][0].workplace_info);
+    try {
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesWorkplaceInfo`, { corporateNumber: searchCorporateNumber });
+      console.log("fetchCompaniesWorkplaceInfo", res.data["hojin-infos"][0].workplace_info);
+      setCompanyWorkplaceInfo(res.data["hojin-infos"][0].workplace_info);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // console.log(companiesSelectData);
@@ -101,7 +109,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
       setResponse(res.data);
     }
     ).catch((err) => {
-      console.log(err);
+      console.error(err);
     });
   };
 
@@ -134,7 +142,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
         },
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 

@@ -15,6 +15,6 @@ export const logoutCall = async (user, dispatch) => {
     await axios.put("https://syukatu-app-new-backend.vercel.app/api/auth/logout", user);
     dispatch({ type: "LOGOUT" });
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };

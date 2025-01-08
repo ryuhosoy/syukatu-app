@@ -17,7 +17,7 @@ mongoose
     console.log("DBと接続中");
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 const openai = new OpenAI({
@@ -52,6 +52,25 @@ app.post("/api/chat", async (req, res) => {
     ],
   });
   
+  // console.log(completion.choices[0].message.content);
+  res.send(completion.choices[0].message.content);
+});
+
+app.post("/api/futureGrowthChat", async (req, res) => {
+  const { prompt } = req.body;
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    max_tokens: 4096,
+    temperature: 0,
+    messages: [
+      { role: "system", content: "あなたは就活マスターです。" },
+      {
+        role: "user",
+        content: `${prompt}`,
+      },
+    ],
+  });
+
   // console.log(completion.choices[0].message.content);
   res.send(completion.choices[0].message.content);
 });

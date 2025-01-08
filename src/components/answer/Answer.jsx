@@ -40,11 +40,17 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const [resultComLocation, setResultComLocation] = useState(null);
   const [resultComLat, setResultComLat] = useState("");
   const [resultComLng, setResultComLng] = useState("");
+  const [futureGrowthChatRes, setFutureGrowthChatRes] = useState("");
 
   useEffect(() => {
     if (resultCompanyData[0]?.location) {
       setResultComLocation(resultCompanyData[0].location)
       // console.log("resultCompanyData location is changed", resultCompanyData[0].location);
+    }
+
+    if (resultCompanyData[0] && netsalesYearsLabels && netsales && numOfEmployeesYearsLabels && numOfEmployees) {
+      const futureGrowthPrompt = `${resultCompanyData[0].companyName}について、次の年度別の売上と従業員数の推移データ、業界等から将来の成長度、安定度の予測について600字程度で説明して。売上:${netsalesYearsLabels.map((year, index) => `${year}: ${netsales[index]}`).join('\n')}、従業員数:${numOfEmployeesYearsLabels.map((year, index) => `${year}: ${numOfEmployees[index]}`).join('\n')}`;
+      giveFutureGrowthPromptToChat(futureGrowthPrompt);
     }
   }, [resultCompanyData]);
 
@@ -133,7 +139,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     try {
       await axios.put(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     fetchFavoriteCompanies();
@@ -155,11 +161,21 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
         },
       });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     deleteNewsForCompany(deleteCompanyName);
     fetchFavoriteCompanies();
+  };
+
+  const giveFutureGrowthPromptToChat = async (futureGrowthPrompt) => {
+    axios.post("https://syukatu-app-new-backend.vercel.app/api/futureGrowthChat", { prompt: futureGrowthPrompt }).then((res) => {
+      console.log("chatres", res);
+      setFutureGrowthChatRes(res.data);
+    }
+    ).catch((err) => {
+      console.error(err);
+    });
   };
 
   let netsalesYearsLabels;
@@ -285,8 +301,9 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     <div className="Answer-wrp">
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
       <div className="answer">
-        {!answerLoading && response ? <p className="answer-head">AIによる企業概要説明</p> : ""}
-        {answerLoading ? <p>AIによる企業概要を作成中...</p> : <p className="company-detail">{response}</p>}
+        {!answerLoading && response ? <p className="answer-head">AIによる企業の将来像</p> : ""}
+        {/* {answerLoading ? <p>AIによる企業概要を作成中...</p> : <p className="company-detail">{response}</p>} */}
+        {answerLoading ? <p>AIによる企業の将来像を作成中...</p> : <p className="company-detail">{futureGrowthChatRes}</p>}
         {response ?
           <div>
             <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
