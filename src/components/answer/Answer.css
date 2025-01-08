@@ -1,4 +1,4 @@
-.welcomeText {
+/* .welcomeText {
   text-align: center;
   font-size: 30px;
   margin-bottom: 30px;
@@ -76,5 +76,121 @@
 @media (max-width: 768px) {
   .Answer-wrp {
     margin-top: 170px;
+  }
+} */
+
+.welcomeText {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 30px;
+}
+
+.Answer-wrp {
+  margin-top: 50px;
+  padding: 30px;
+  color: white;
+  border-radius: 10px;
+}
+
+.answer {
+  margin-bottom: 30px;
+}
+
+.answer-head {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.company-detail {
+  padding: 20px 0;
+  font-size: 18px;
+}
+
+.section-title {
+  font-size: 25px;
+  font-weight: bold;
+  border-bottom: 2px solid white;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.favoriteCompanies-wrp {
+  color: white;
+  margin-top: 30px;
+}
+
+.favoriteCompanies-head {
+  text-align: center;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.favoriteCompany {
+  border-bottom: 2px solid white;
+  padding: 20px 0;
+  margin-bottom: 20px;
+}
+
+.favoriteCompanies-name {
+  display: inline-block;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.favoriteCompanies-about {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.news-section {
+  margin-top: 20px;
+}
+
+.news-section-head {
+  font-size: 22px;
+  font-weight: bold;
+  padding: 15px 0;
+}
+
+.news-item {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.news-item:hover {
+  opacity: 0.8;
+}
+
+.news-description {
+  font-size: 16px;
+}
+
+.news-image {
+  width: 80px;
+  height: auto;
+}
+
+.Pie-chart-wrp {
+  width: 50%;
+  margin: 20px auto;
+}
+
+@media (max-width: 768px) {
+  .Answer-wrp {
+    margin-top: 170px;
+    padding: 20px;
+  }
+
+  .news-image {
+    width: 60px;
+  }
+
+  .Pie-chart-wrp {
+    width: 80%;
   }
 }

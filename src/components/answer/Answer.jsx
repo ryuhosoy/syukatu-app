@@ -301,40 +301,99 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     <div className="Answer-wrp">
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
       <div className="answer">
-        {!answerLoading && response ? <p className="answer-head">AIによる企業の将来像</p> : ""}
-        {/* {answerLoading ? <p>AIによる企業概要を作成中...</p> : <p className="company-detail">{response}</p>} */}
-        {answerLoading ? <p>AIによる企業の将来像を作成中...</p> : <p className="company-detail">{futureGrowthChatRes}</p>}
-        {response ?
+        {!answerLoading && response && <p className="section-title">AIによる企業の将来像</p>}
+        {answerLoading ? (
+          <p>AIによる企業の将来像を作成中...</p>
+        ) : (
+          <p className="company-detail">{futureGrowthChatRes}</p>
+        )}
+        {response && (
           <div>
             <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
           </div>
-          : ""}
-        {netsalesYearsLabels && netsales && netsales.some(item => item) ? <Bar options={netsalesOptions} data={netsalesBarData} /> : "売上のデータがありません"}
-        {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} /> : <p>従業員数のデータがありません</p>}
-        {resultCompanyData?.[0]?.averageAge && resultCompanyData?.[0]?.averageAge != "None" ? <p>平均年齢：{resultCompanyData[0].averageAge}歳</p> : "平均年齢のデータがありません"}
-        {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary != "None" ? <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}円</p> : <p>平均年間給与のデータがありません</p>}
-        {resultCompanyData?.[0]?.averageLengthOfService && resultCompanyData?.[0]?.averageLengthOfService != "None" ? <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}年</p> : <p>平均勤続年数のデータがありません</p>}
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female && companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female != "None" ? <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}年</p> : <p>女性従業員の平均勤続年数のデータがありません</p>}
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male && companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male != "None" ? <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}年</p> : <p>男性従業員の平均勤続年数のデータがありません</p>}
-        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion && companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion != "None" ? <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}％</p> : <p>女性従業員の割合のデータがありません</p>}
-        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion && companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion != "None" ? (
+        )}
+
+        <p className="section-title">売上データ</p>
+        {netsalesYearsLabels && netsales && netsales.some(item => item) ? (
+          <Bar options={netsalesOptions} data={netsalesBarData} />
+        ) : (
+          <p>売上のデータがありません</p>
+        )}
+
+        <p className="section-title">従業員数データ</p>
+        {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? (
+          <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} />
+        ) : (
+          <p>従業員数のデータがありません</p>
+        )}
+
+        <p className="section-title">企業データ</p>
+        {resultCompanyData?.[0]?.averageAge && resultCompanyData?.[0]?.averageAge !== "None" ? (
+          <p>平均年齢：{resultCompanyData[0].averageAge}歳</p>
+        ) : (
+          <p>平均年齢のデータがありません </p>
+        )}
+
+        {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary !== "None" ? (
+          <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}円</p>
+        ) : (
+          <p>平均年間給与のデータがありません</p>
+        )}
+
+        {resultCompanyData?.[0]?.averageLengthOfService && resultCompanyData?.[0]?.averageLengthOfService !== "None" ? (
+          <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}年</p>
+        ) : (
+          <p>平均勤続年数のデータがありません</p>
+        )}
+
+        <p className="section-title">女性従業員データ</p>
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female &&
+          companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female !== "None" ? (
+          <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}年</p>
+        ) : (
+          <p>女性従業員の平均勤続年数のデータがありません</p>
+        )}
+
+        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male &&
+          companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male !== "None" ? (
+          <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}年</p>
+        ) : (
+          <p>男性従業員の平均勤続年数のデータがありません</p>
+        )}
+
+        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion &&
+          companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion !== "None" ? (
           <div className="Pie-chart-wrp">
+            <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}％</p>
             <Pie data={sexProportionData} options={sexProportionOptions} />
           </div>
-        ) : <p>従業員の性別の割合のデータがありません</p>}
-        {resultCompanyData?.[0]?.descriptionOfBusiness ? <p>{resultCompanyData[0].descriptionOfBusiness}</p> : <p>事業概要のデータがありません</p>}
-        {resultCompanyData?.[0]?.location ? <p>所在地：{resultCompanyData[0].location}</p> : <p>所在地のデータがありません</p>}
+        ) : (
+          <p>従業員の性別の割合のデータがありません</p>
+        )}
+
+        <p className="section-title">事業概要</p>
+        {resultCompanyData?.[0]?.descriptionOfBusiness ? (
+          <p>{resultCompanyData[0].descriptionOfBusiness}</p>
+        ) : (
+          <p>事業概要のデータがありません</p>
+        )}
+
+        <p className="section-title">所在地</p>
+        {resultCompanyData?.[0]?.location ? (
+          <p>所在地：{resultCompanyData[0].location}</p>
+        ) : (
+          <p>所在地のデータがありません</p>
+        )}
+
         {isLoaded && resultComLat && resultComLng ? (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={15}
-          >
+          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15}>
             <Marker position={center} />
           </GoogleMap>
-        ) : <p>GoogleMapを表示できません</p>
-        }
+        ) : (
+          <p>GoogleMapを表示できません</p>
+        )}
       </div>
+
       <div className="favoriteCompanies-wrp">
         <p className="favoriteCompanies-head">お気に入り企業一覧</p>
         {favoriteCompanies ? (
@@ -348,17 +407,15 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
                   news[object.companyName].value.map((news, i) => (
                     <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
                       <p className="news-description">・　{news.snippet}</p>
-                      {/* {/* {news.image?.contentUrl && <img className="news-image" src={news.image.contentUrl} alt="" />} */}
                     </a>
                   ))
                 ) : (
                   <p>関連するニュースがありません。</p>
                 )}
               </div>
-              <button className="deleteFromFavoriteCompaniesButton"
-                onClick={() =>
-                  deleteFromFavoriteCompanies(object.companyName, object.companyAbout)
-                }
+              <button
+                className="deleteFromFavoriteCompaniesButton"
+                onClick={() => deleteFromFavoriteCompanies(object.companyName, object.companyAbout)}
               >
                 {object.companyName}をお気に入りから削除する
               </button>
