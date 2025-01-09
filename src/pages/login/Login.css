@@ -9,6 +9,7 @@
 
 .loginWrapper {
   width: 70%;
+  height: 70%;
   display: flex;
 }
 
@@ -74,7 +75,7 @@
 
 .loginRegisterButton {
   height: 50px;
-  width: 70%;
+  width: 75%;
   align-self: center;
   border-radius: 10px;
   border: none;
