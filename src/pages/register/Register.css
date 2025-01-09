@@ -75,7 +75,7 @@
 
 .loginRegisterButton {
   height: 50px;
-  width: 60%;
+  width: 70%;
   align-self: center;
   border-radius: 10px;
   border: none;
@@ -91,4 +91,10 @@
   font-weight: 550;
   text-align: center;
   margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .login {
+    height: 100%;
+  }
 }

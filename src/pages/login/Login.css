@@ -9,7 +9,6 @@
 
 .loginWrapper {
   width: 70%;
-  height: 70%;
   display: flex;
 }
 
@@ -93,6 +92,10 @@
 }
 
 @media (max-width: 768px) {
+  .login {
+    height: 100%;
+  }
+
   .loginWrapper {
     width: 90%;
     height: auto;
