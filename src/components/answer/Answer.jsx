@@ -395,8 +395,8 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
       </div>
 
       <div className="favoriteCompanies-wrp">
-        <p className="favoriteCompanies-head">お気に入り企業一覧</p>
-        {favoriteCompanies ? (
+        {favoriteCompanies.length > 0 ? (<p className="favoriteCompanies-head">お気に入り企業一覧</p>) : ""}
+        {favoriteCompanies.length > 0 ? (
           favoriteCompanies.map((object, index) => (
             <div key={index} className="favoriteCompany">
               <p className="favoriteCompanies-name">{object.companyName}</p>
