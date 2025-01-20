@@ -75,7 +75,7 @@
 
 .loginRegisterButton {
   height: 50px;
-  width: 60%;
+  width: 75%;
   align-self: center;
   border-radius: 10px;
   border: none;
@@ -90,4 +90,74 @@
   font-weight: 550;
   text-align: center;
   margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .login {
+    height: 100%;
+  }
+
+  .loginWrapper {
+    width: 90%;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .loginBox {
+    height: auto;
+  }
+
+  .loginLeft,
+  .loginRight {
+    flex: none;
+    padding: 10px;
+  }
+
+  .loginLogo {
+    font-size: 40px;
+    text-align: center;
+  }
+
+  .loginDesc {
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .loginInput {
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .loginButton,
+  .loginRegisterButton {
+    height: 40px;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .loginWrapper {
+    width: 100%;
+  }
+
+  .loginBox {
+    padding: 15px;
+  }
+
+  .loginLogo {
+    font-size: 30px;
+  }
+
+  .loginDesc {
+    font-size: 18px;
+  }
+
+  .loginInput {
+    font-size: 14px;
+  }
+
+  .loginButton,
+  .loginRegisterButton {
+    font-size: 16px;
+  }
 }

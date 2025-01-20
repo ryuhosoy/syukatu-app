@@ -3,16 +3,17 @@ import Answer from "../../components/answer/Answer";
 import Topbar from "../../components/topbar/Topbar";
 
 function Home() {
-  const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
   const [favoriteCompanies, setFavoriteCompanies] = useState([]);
   const [answerLoading, setAnswerLoading] = useState(false);
+  const [resultCompanyData, setResultCompanyData] = useState([]);
+  const [companyWorkplaceInfo, setCompanyWorkplaceInfo] = useState("");
 
   return (
     <>
-      <Topbar prompt={prompt} setPrompt={setPrompt} setAnswerLoading={setAnswerLoading} setResponse={setResponse} />
+      <Topbar setAnswerLoading={setAnswerLoading} setResponse={setResponse} setResultCompanyData={setResultCompanyData} setCompanyWorkplaceInfo={setCompanyWorkplaceInfo} companyWorkplaceInfo={companyWorkplaceInfo} />
       {/*sidebar*/}
-      <Answer prompt={prompt} response={response} setResponse={setResponse} favoriteCompanies={favoriteCompanies} setFavoriteCompanies={setFavoriteCompanies} answerLoading={answerLoading} />
+      <Answer response={response} setResponse={setResponse} favoriteCompanies={favoriteCompanies} setFavoriteCompanies={setFavoriteCompanies} answerLoading={answerLoading} resultCompanyData={resultCompanyData} companyWorkplaceInfo={companyWorkplaceInfo} />
       {/*rightber*/}
     </>
   );

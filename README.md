@@ -1,8 +1,52 @@
-# React + Vite
+# 就活支援アプリケーション
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 概要
+このアプリケーションは、就職活動中の学生をサポートするためのWebアプリケーションです。CSVファイルから企業情報を定期的に取得・分析し、AIによる将来予測、お気に入り機能など、就活に役立つ様々な機能を提供します。
 
-Currently, two official plugins are available:
+## 主な機能
+### データ収集・分析
+- 企業情報の自動収集
+  - CSVファイルの定期的な自動ダウンロード（日次更新）
+  - データベースへの自動更新処理
+  - データの整形・クレンジング
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 企業分析機能
+- AIによる企業の将来性予測
+- 財務データの可視化
+  - 売上推移
+  - 従業員数の推移
+- 企業の基本情報表示
+  - 平均年齢
+  - 平均年間給与
+  - 平均勤続年数
+- 従業員データの分析
+  - 男女比率
+  - 女性従業員の勤続年数
+- 企業の所在地（Google Maps連携）
+
+### ユーザー機能
+- お気に入り企業の登録・管理
+- 企業の最新ニュース表示
+
+## 技術スタック
+### フロントエンド
+- React.js
+- Chart.js
+- Google Maps API
+- Axios
+
+### バックエンド
+- Node.js
+- Express
+- MongoDB
+
+### 自動化システム
+- Python（CSVファイルダウンロードの自動化）
+- Node.js（データ処理）
+
+### 使用API
+- OpenAI API（企業分析・将来予測）
+- Google Maps API（企業所在地の表示）
+- Bing News Search API（企業ニュースの取得）
+- React Geocode API（住所から緯度経度への変換）
+- EDINET API（企業の財務情報取得）

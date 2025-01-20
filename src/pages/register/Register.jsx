@@ -24,7 +24,7 @@ function Register() {
           password: password.current.value,
         };
 
-        await axios.post("https://syukatu-app-backend.vercel.app/api/auth/register", user);
+        await axios.post("https://syukatu-app-new-backend.vercel.app/api/auth/register", user);
         navigate("/login");
       } catch (err) {
         console.log(err);

@@ -4,9 +4,13 @@ import bodyParser from "body-parser";
 import OpenAI from "openai";
 import authRoute from "./routes/auth.mjs";
 import usersRoute from "./routes/users.mjs";
+import companiesRoute from "./routes/companies.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
 import https from "https";
+import schedule from 'node-schedule';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 env.config();
 
@@ -16,7 +20,7 @@ mongoose
     console.log("DBと接続中");
   })
   .catch((err) => {
-    console.log(err);
+    console.error(err);
   });
 
 const openai = new OpenAI({
@@ -29,6 +33,7 @@ app.use(cors());
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
+app.use("/api/companies", companiesRoute);
 
 app.get("/", async (req, res) => {
   console.log("Hello, this is the server root!");
@@ -50,7 +55,26 @@ app.post("/api/chat", async (req, res) => {
     ],
   });
   
-  console.log(completion.choices[0].message.content);
+  // console.log(completion.choices[0].message.content);
+  res.send(completion.choices[0].message.content);
+});
+
+app.post("/api/futureGrowthChat", async (req, res) => {
+  const { prompt } = req.body;
+  const completion = await openai.chat.completions.create({
+    model: "gpt-3.5-turbo",
+    max_tokens: 4096,
+    temperature: 0,
+    messages: [
+      { role: "system", content: "あなたは就活マスターです。" },
+      {
+        role: "user",
+        content: `${prompt}`,
+      },
+    ],
+  });
+
+  // console.log(completion.choices[0].message.content);
   res.send(completion.choices[0].message.content);
 });
 
@@ -92,6 +116,34 @@ app.post("/api/news", async (req, res) => {
   const query = `${req.body.companyName}関連ニュース`;
   bingWebSearch(query);
 });
+
+// google map api key: AIzaSyD0C3aL0m4on5-6w5H3W1NawXPGHByZOjg
+
+// execを Promise化
+const execAsync = promisify(exec);
+
+// Pythonスクリプト実行関数
+async function runPythonScripts() {
+  try {
+    console.log('Pythonスクリプトの実行を開始します');
+    
+    // fetcherInfoDuringLikeSpan.pyの実行
+    const { stdout: stdout1, stderr: stderr1 } = await execAsync('python3 fetcherInfoDuringLikeSpan.py');
+    if (stderr1) console.error('fetcherInfoDuringLikeSpan.py エラー:', stderr1);
+    if (stdout1) console.log('fetcherInfoDuringLikeSpan.py 出力:', stdout1);
+    
+    // fetcherAllCompanies.pyの実行
+    const { stdout: stdout2, stderr: stderr2 } = await execAsync('python3 fetcherAllCompanies.py');
+    if (stderr2) console.error('fetcherAllCompanies.py エラー:', stderr2);
+    if (stdout2) console.log('fetcherAllCompanies.py 出力:', stdout2);
+    
+  } catch (error) {
+    console.error('スクリプト実行エラー:', error);
+  }
+}
+
+// 毎日午前3時に実行するスケジュール設定
+schedule.scheduleJob("0 3 * * *", runPythonScripts);
 
 const port = 8080;
 app.listen(port, () => {

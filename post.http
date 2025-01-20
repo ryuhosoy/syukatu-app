@@ -1,8 +1,8 @@
 ###
-GET http://localhost:8080
+GET https://syukatu-app-new-backend.vercel.app
 
 ### 
-POST http://localhost:8080/api/auth/register
+POST https://syukatu-app-new-backend.vercel.app/api/auth/register
 Content-Type: application/json
 
 {
@@ -12,7 +12,7 @@ Content-Type: application/json
 }
 
 ### 
-POST http://localhost:8080/api/posts
+POST https://syukatu-app-new-backend.vercel.app/api/posts
 Content-Type: application/json
 
 {
@@ -21,7 +21,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:8080/api/auth/login
+POST https://syukatu-app-new-backend.vercel.app/api/auth/login
 Content-Type: application/json
 
 {
@@ -30,7 +30,7 @@ Content-Type: application/json
 }
 
 ###
-PUT  http://localhost:8080/api/users/66de9c21217f1ab8682480ef
+PUT  https://syukatu-app-new-backend.vercel.app/api/users/66de9c21217f1ab8682480ef
 Content-Type: application/json
 
 {
@@ -39,7 +39,7 @@ Content-Type: application/json
 }
 
 ###
-DELETE http://localhost:8080/api/users/66e13341f99ede0fcbc7b2e9
+DELETE https://syukatu-app-new-backend.vercel.app/api/users/66e13341f99ede0fcbc7b2e9
 Content-Type: application/json
 
 {
@@ -47,10 +47,10 @@ Content-Type: application/json
 }
 
 ###
-GET  http://localhost:8080/api/users/66de8be96220fa7ae95133f4
+GET  https://syukatu-app-new-backend.vercel.app/api/users/66de8be96220fa7ae95133f4
 
 ###
-PUT  http://localhost:8080/api/users/66e12cf2cbf45d65dad040ad/follow
+PUT  https://syukatu-app-new-backend.vercel.app/api/users/66e12cf2cbf45d65dad040ad/follow
 Content-Type: application/json
 
 {
@@ -58,7 +58,7 @@ Content-Type: application/json
 }
 
 ###
-PUT  http://localhost:8080/api/users/66e12cf2cbf45d65dad040ad/unfollow
+PUT  http://localhost:8080//api/users/66e12cf2cbf45d65dad040ad/unfollow
 Content-Type: application/json
 
 {
