@@ -121,8 +121,8 @@ class GetDocid:
         return merged_df
 
 
-start_date = datetime.date(2024, 3, 1)
-end_date = datetime.date(2024, 12, 22)
+start_date = datetime.date(2022, 3, 1)
+end_date = datetime.date.today()
 
 gd = GetDocid(start_date, end_date)
 edinet_df = gd.create_docid_df("content-edinet")

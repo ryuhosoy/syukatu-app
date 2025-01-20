@@ -8,6 +8,9 @@ import companiesRoute from "./routes/companies.mjs";
 import mongoose from "mongoose";
 import env from "dotenv";
 import https from "https";
+import schedule from 'node-schedule';
+import { exec } from 'child_process';
+import { promisify } from 'util';
 
 env.config();
 
@@ -115,6 +118,32 @@ app.post("/api/news", async (req, res) => {
 });
 
 // google map api key: AIzaSyD0C3aL0m4on5-6w5H3W1NawXPGHByZOjg
+
+// execを Promise化
+const execAsync = promisify(exec);
+
+// Pythonスクリプト実行関数
+async function runPythonScripts() {
+  try {
+    console.log('Pythonスクリプトの実行を開始します');
+    
+    // fetcherInfoDuringLikeSpan.pyの実行
+    const { stdout: stdout1, stderr: stderr1 } = await execAsync('python3 fetcherInfoDuringLikeSpan.py');
+    if (stderr1) console.error('fetcherInfoDuringLikeSpan.py エラー:', stderr1);
+    if (stdout1) console.log('fetcherInfoDuringLikeSpan.py 出力:', stdout1);
+    
+    // fetcherAllCompanies.pyの実行
+    const { stdout: stdout2, stderr: stderr2 } = await execAsync('python3 fetcherAllCompanies.py');
+    if (stderr2) console.error('fetcherAllCompanies.py エラー:', stderr2);
+    if (stdout2) console.log('fetcherAllCompanies.py 出力:', stdout2);
+    
+  } catch (error) {
+    console.error('スクリプト実行エラー:', error);
+  }
+}
+
+// 毎日午前3時に実行するスケジュール設定
+schedule.scheduleJob("0 3 * * *", runPythonScripts);
 
 const port = 8080;
 app.listen(port, () => {
