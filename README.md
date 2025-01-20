@@ -43,3 +43,10 @@
 ### 自動化システム
 - Python（CSVファイルダウンロードの自動化）
 - Node.js（データ処理）
+
+### 使用API
+- OpenAI API（企業分析・将来予測）
+- Google Maps API（企業所在地の表示）
+- Bing News Search API（企業ニュースの取得）
+- React Geocode API（住所から緯度経度への変換）
+- EDINET API（企業の財務情報取得）
