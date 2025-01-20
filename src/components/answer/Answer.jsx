@@ -363,10 +363,12 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
 
         {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion &&
           companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion !== "None" ? (
-          <div className="Pie-chart-wrp">
+          <>
             <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}％</p>
-            <Pie data={sexProportionData} options={sexProportionOptions} />
-          </div>
+            <div className="Pie-chart-wrp">
+              <Pie data={sexProportionData} options={sexProportionOptions} />
+            </div>
+          </>
         ) : (
           <p>従業員の性別の割合のデータがありません</p>
         )}

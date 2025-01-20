@@ -1,196 +1,201 @@
-/* .welcomeText {
-  text-align: center;
-  font-size: 30px;
-  margin-bottom: 30px;
-}
-
 .Answer-wrp {
-  margin-top: 50px;
-  padding: 30px;
-  color: white;
+  max-width: 1200px;
+  margin: 80px auto 0;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  font-family: 'Noto Sans JP', sans-serif;
 }
-
-.answer-head {
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.company-detail {
-  padding: 20px 0;
-}
-
-.favoriteCompanies-wrp {
-  color: white;
-  margin-top: 30px;
-}
-
-.favoriteCompanies-head {
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-}
-
-.favoriteCompany {
-  border-bottom: 2px solid white;
-  padding: 20px 0;
-}
-
-.favoriteCompanies-name {
-  display: inline-block;
-  font-size: 25px;
-  font-weight: bold;
-  border-bottom: 2px solid white;
-}
-
-.favoriteCompanies-about {
-  margin-top: 20px;
-}
-
-.news-section-head {
-  font-size: 25px;
-  font-weight: bold;
-  text-align: center;
-  padding: 20px 0;
-}
-
-.news-item {
-  padding-bottom: 20px;
-  display: flex;
-  gap: 20px;
-}
-
-.news-item:hover {
-  opacity: 0.6;
-}
-
-.news-image {
-  width: 20%;
-}
-
-.Pie-chart-wrp {
-  width: 30%;
-  margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-  .Answer-wrp {
-    margin-top: 170px;
-  }
-} */
 
 .welcomeText {
+  font-size: 2.5rem;
+  font-weight: 700;
   text-align: center;
-  font-size: 30px;
-  margin-bottom: 30px;
-}
-
-.Answer-wrp {
-  margin-top: 50px;
-  padding: 30px;
-  color: white;
-  border-radius: 10px;
+  color: #2563eb;
+  margin-bottom: 3rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(45deg, #2563eb, #1d4ed8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .answer {
-  margin-bottom: 30px;
-}
-
-.answer-head {
-  text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.company-detail {
-  padding: 20px 0;
-  font-size: 18px;
+  background: #ffffff;
+  border-radius: 2rem;
+  padding: 3rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 3rem;
+  transition: all 0.3s ease;
 }
 
 .section-title {
-  font-size: 25px;
-  font-weight: bold;
-  border-bottom: 2px solid white;
-  margin-bottom: 15px;
-  display: inline-block;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2563eb;
+  margin: 3rem 0 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid #2563eb;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-title::before {
+  content: '📊';
+  font-size: 2rem;
+}
+
+.company-detail {
+  line-height: 2;
+  color: #4b5563;
+  font-size: 1.2rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 1rem;
+}
+
+button {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -2px rgba(37, 99, 235, 0.4);
+  background: #1d4ed8;
+}
+
+.chart-container {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  margin: 2.5rem 0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .favoriteCompanies-wrp {
-  color: white;
-  margin-top: 30px;
+  background: #ffffff;
+  border-radius: 2rem;
+  padding: 3rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
 .favoriteCompanies-head {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2563eb;
   text-align: center;
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 3rem;
+  position: relative;
 }
 
 .favoriteCompany {
-  border-bottom: 2px solid white;
-  padding: 20px 0;
-  margin-bottom: 20px;
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  margin-bottom: 2.5rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
-.favoriteCompanies-name {
-  display: inline-block;
-  font-size: 25px;
-  font-weight: bold;
-}
-
-.favoriteCompanies-about {
-  margin-top: 20px;
-  font-size: 18px;
+.favoriteCompany:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .news-section {
-  margin-top: 20px;
+  margin-top: 2.5rem;
+  padding: 2rem;
+  background: white;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .news-section-head {
-  font-size: 22px;
-  font-weight: bold;
-  padding: 15px 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 1.5rem;
 }
 
 .news-item {
-  padding-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 20px;
+  padding: 1.2rem;
+  margin-bottom: 1rem;
+  border-radius: 1rem;
+  background: #f8fafc;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  border: 1px solid rgba(37, 99, 235, 0.1);
 }
 
 .news-item:hover {
-  opacity: 0.8;
+  background: #f1f5f9;
+  transform: translateX(5px);
 }
 
 .news-description {
-  font-size: 16px;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4b5563;
 }
 
-.news-image {
-  width: 80px;
-  height: auto;
+.deleteFromFavoriteCompaniesButton {
+  background: #ef4444;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.deleteFromFavoriteCompaniesButton:hover {
+  background: #dc2626;
 }
 
 .Pie-chart-wrp {
-  width: 50%;
-  margin: 20px auto;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f8fafc;
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
   .Answer-wrp {
-    margin-top: 170px;
-    padding: 20px;
+    padding: 1rem;
+    margin-top: 60px;
   }
 
-  .news-image {
-    width: 60px;
+  .welcomeText {
+    font-size: 2rem;
   }
 
-  .Pie-chart-wrp {
-    width: 80%;
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .company-detail {
+    font-size: 1.1rem;
+    padding: 1rem;
+  }
+
+  .chart-container {
+    padding: 1.5rem;
+  }
+
+  .favoriteCompanies-head {
+    font-size: 1.8rem;
   }
 }

@@ -47,20 +47,28 @@ try:
     df_info = pd.read_csv(df_info_path, encoding="cp932", skiprows=[0])
     print(df_info)
     for index, row in df_info.iterrows():
-        companyName = row["提出者名"]    
+        companyName = row["提出者名"]
         try:
             database = client.get_database("syukatu")
             companies = database.get_collection("companies")
             # 会社名が見つかれば上書き、見つからなければ会社を新しく作り挿入
-            # if not companies.find_one({"companyName": companyName}):
-            #     companies.insert_one({"companyName": companyName})
-                
-            # # else:
-            # if row["提出者種別"] == "個人（組合発行者を除く）":
-            #     print(row["提出者種別"], companyName)
-            #     companies.delete_one({"companyName": companyName})
-                
-            if not row["提出者種別"] == "個人（組合発行者を除く）":
+            if (
+                not companies.find_one({"companyName": companyName})
+                and row["提出者種別"] == "個人（組合発行者を除く）"
+            ):
+                companies.insert_one({"companyName": companyName})
+
+            elif (
+                companies.find_one({"companyName": companyName})
+                and row["提出者種別"] == "個人（組合発行者を除く）"
+            ):
+                print(row["提出者種別"], companyName)
+                companies.delete_one({"companyName": companyName})
+
+            elif (
+                companies.find_one({"companyName": companyName})
+                and not row["提出者種別"] == "個人（組合発行者を除く）"
+            ):
                 print("companyName", companyName)
                 print("location", row["所在地"])
                 companies.update_one(
