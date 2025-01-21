@@ -173,8 +173,12 @@ button:hover {
 }
 
 @media (max-width: 768px) {
+  .answer {
+    padding: 2rem 1rem 2rem 1rem;
+  }
+
   .Answer-wrp {
-    padding: 1rem;
+    padding: 0;
     margin-top: 60px;
   }
 
@@ -184,6 +188,7 @@ button:hover {
 
   .section-title {
     font-size: 1.5rem;
+    margin-top: 0;
   }
 
   .company-detail {
