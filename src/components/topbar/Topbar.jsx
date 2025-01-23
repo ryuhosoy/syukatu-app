@@ -38,7 +38,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
 
   const fetchCompaniesData = async () => {
     try {
-      const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/companies/companiesData`);
+      const res = await axios.get(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesData`);
       const resCompaniesData = res.data;
       // console.log("res", resCompaniesData);
       // localStorage.setItem("companiesData", JSON.stringify(res.data));
@@ -59,7 +59,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
 
   const fetchSearchCorporateNumber = async () => {
     try {
-      const res = await axios.post(`https://syukatu-app-backend.vercel.app/api/companies/corporateNumber`, { corporateName: searchCompanyName });
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/corporateNumber`, { corporateName: searchCompanyName });
       console.log("fetchSearchCorporateNumber", res.data["hojin-infos"][0]);
       const corporateNumber = res.data["hojin-infos"][0].corporate_number
       console.log("corporateNumber", corporateNumber);
@@ -72,7 +72,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
   // その後その法人番号で職場情報を得るapiを叩いて職場情報を得る。
   const fetchCompaniesWorkplaceInfo = async () => {
     try {
-      const res = await axios.post(`https://syukatu-app-backend.vercel.app/api/companies/companiesWorkplaceInfo`, { corporateNumber: searchCorporateNumber });
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/companies/companiesWorkplaceInfo`, { corporateNumber: searchCorporateNumber });
       console.log("fetchCompaniesWorkplaceInfo", res.data["hojin-infos"][0].workplace_info);
       setCompanyWorkplaceInfo(res.data["hojin-infos"][0].workplace_info);
     } catch (err) {
@@ -104,7 +104,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     // console.log("searchCompanyName", searchCompanyName);
 
     setAnswerLoading(true);
-    axios.post("https://syukatu-app-backend.vercel.app/api/chat", { prompt: searchCompanyName }).then((res) => {
+    axios.post("https://syukatu-app-new-backend.vercel.app/api/chat", { prompt: searchCompanyName }).then((res) => {
       setAnswerLoading(false);
       setResponse(res.data);
     }
@@ -135,7 +135,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     }, dispatch);
 
     try {
-      await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}`, {
+      await axios.delete(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}`, {
         data: {
           userId: user._id,
           isAdmin: user.isAdmin,

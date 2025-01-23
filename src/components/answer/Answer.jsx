@@ -96,7 +96,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
 
   const fetchNewsForCompany = async (companyName) => {
     try {
-      const res = await axios.post(`https://syukatu-app-backend.vercel.app/api/news`, { companyName });
+      const res = await axios.post(`https://syukatu-app-new-backend.vercel.app/api/news`, { companyName });
       // console.log("res", res);
 
       setNews((prevNews) => ({
@@ -121,7 +121,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const fetchFavoriteCompanies = async () => {
     try {
       if (localStorage.getItem("user")) {
-        const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
+        const res = await axios.get(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/fetchFavoriteCompanies`);
         setFavoriteCompanies(res.data);
       }
     } catch (err) {
@@ -138,7 +138,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     };
 
     try {
-      await axios.put(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
+      await axios.put(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/addToFavoriteCompanies`, { userId: user._id, addFavoriteCompanyContent });
     } catch (err) {
       console.error(err);
     }
@@ -155,7 +155,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     console.log("deleteFavoriteCompanyContent", deleteFavoriteCompanyContent);
 
     try {
-      await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
+      await axios.delete(`https://syukatu-app-new-backend.vercel.app/api/users/${user._id}/deleteFromFavoriteCompanies`, {
         data: {
           userId: user._id,
           deleteFavoriteCompanyContent,
@@ -170,7 +170,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   };
 
   const giveFutureGrowthPromptToChat = async (futureGrowthPrompt) => {
-    axios.post("https://syukatu-app-backend.vercel.app/api/futureGrowthChat", { prompt: futureGrowthPrompt }).then((res) => {
+    axios.post("https://syukatu-app-new-backend.vercel.app/api/futureGrowthChat", { prompt: futureGrowthPrompt }).then((res) => {
       console.log("chatres", res);
       setFutureGrowthChatRes(res.data);
     }
