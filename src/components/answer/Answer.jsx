@@ -18,6 +18,7 @@ import {
   setDefaults,
   fromAddress,
 } from "react-geocode";
+import { Favorite, FavoriteBorder } from "@mui/icons-material";
 
 ChartJS.register(
   CategoryScale,
@@ -297,134 +298,157 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     },
   };
 
+  const isCompanyFavorited = resultCompanyData?.[0]?.companyName && 
+    favoriteCompanies.some(company => company.companyName === resultCompanyData[0].companyName);
+
   return (
     <div className="Answer-wrp">
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
+      
       <div className="answer">
-        {!answerLoading && response && <p className="section-title">AIによる企業の将来像</p>}
-        {answerLoading ? (
-          <p>AIによる企業の将来像を作成中...</p>
-        ) : (
-          <p className="company-detail">{futureGrowthChatRes}</p>
+        {!answerLoading && response && (
+          <>
+            <div className="section-header">
+              <h2 className="section-title">AIによる企業の将来像</h2>
+              <button 
+                className={`favorite-button ${isCompanyFavorited ? 'active' : ''}`}
+                onClick={addToFavoriteCompanies}
+                disabled={isCompanyFavorited}
+                title={isCompanyFavorited ? "お気に入り登録済み" : "お気に入りに登録"}
+              >
+                {isCompanyFavorited ? <Favorite /> : <FavoriteBorder />}
+              </button>
+            </div>
+            {answerLoading ? (
+              <div className="loading-container">
+                <p>AIによる分析中...</p>
+              </div>
+            ) : (
+              <p className="company-detail">{futureGrowthChatRes}</p>
+            )}
+          </>
         )}
-        {response && (
-          <div>
-            <button onClick={addToFavoriteCompanies}>この会社をお気に入り登録する</button>
+
+        <h2 className="section-title">売上高の推移</h2>
+        <div className="chart-container">
+          {netsalesYearsLabels && netsales && netsales.some(item => item) ? (
+            <Bar options={netsalesOptions} data={netsalesBarData} />
+          ) : (
+            <p className="no-data-message">企業を選択すると売上高の推移が表示されます</p>
+          )}
+        </div>
+
+        <h2 className="section-title">従業員数の推移</h2>
+        <div className="chart-container">
+          {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? (
+            <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} />
+          ) : (
+            <p className="no-data-message">企業を選択すると従業員数の推移が表示されます</p>
+          )}
+        </div>
+
+        <h2 className="section-title">企業基本情報</h2>
+        {resultCompanyData?.[0]?.averageAge && resultCompanyData?.[0]?.averageAge !== "None" && (
+          <div className="data-row">
+            <span className="data-label">平均年齢</span>
+            <span className="data-value">{resultCompanyData[0].averageAge}歳</span>
           </div>
         )}
 
-        <p className="section-title">売上データ</p>
-        {netsalesYearsLabels && netsales && netsales.some(item => item) ? (
-          <Bar options={netsalesOptions} data={netsalesBarData} />
-        ) : (
-          <p>売上のデータがありません</p>
+        {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary !== "None" && (
+          <div className="data-row">
+            <span className="data-label">平均年間給与</span>
+            <span className="data-value">{resultCompanyData[0].averageAnnualSalary}円</span>
+          </div>
         )}
 
-        <p className="section-title">従業員数データ</p>
-        {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? (
-          <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} />
-        ) : (
-          <p>従業員数のデータがありません</p>
+        {resultCompanyData?.[0]?.averageLengthOfService && resultCompanyData?.[0]?.averageLengthOfService !== "None" && (
+          <div className="data-row">
+            <span className="data-label">平均勤続年数</span>
+            <span className="data-value">{resultCompanyData[0].averageLengthOfService}年</span>
+          </div>
         )}
 
-        <p className="section-title">企業データ</p>
-        {resultCompanyData?.[0]?.averageAge && resultCompanyData?.[0]?.averageAge !== "None" ? (
-          <p>平均年齢：{resultCompanyData[0].averageAge}歳</p>
-        ) : (
-          <p>平均年齢のデータがありません </p>
-        )}
-
-        {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary !== "None" ? (
-          <p>平均年間給与：{resultCompanyData[0].averageAnnualSalary}円</p>
-        ) : (
-          <p>平均年間給与のデータがありません</p>
-        )}
-
-        {resultCompanyData?.[0]?.averageLengthOfService && resultCompanyData?.[0]?.averageLengthOfService !== "None" ? (
-          <p>平均勤続年数：{resultCompanyData[0].averageLengthOfService}年</p>
-        ) : (
-          <p>平均勤続年数のデータがありません</p>
-        )}
-
-        <p className="section-title">女性従業員データ</p>
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female &&
-          companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female !== "None" ? (
-          <p>女性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}年</p>
-        ) : (
-          <p>女性従業員の平均勤続年数のデータがありません</p>
-        )}
-
-        {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male &&
-          companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male !== "None" ? (
-          <p>男性従業員の平均勤続年数：{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}年</p>
-        ) : (
-          <p>男性従業員の平均勤続年数のデータがありません</p>
-        )}
-
-        {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion &&
-          companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion !== "None" ? (
-          <>
-            <p>女性従業員の割合：{companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion}％</p>
-            <div className="Pie-chart-wrp">
+        <h2 className="section-title">従業員データ</h2>
+        <div className="employee-stats">
+          <div className="employee-stats-row">
+            <div className="employee-stat-item">
+              <span className="stat-label">女性従業員の平均勤続年数</span>
+              {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female &&
+                companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female !== "None" ? (
+                <span className="stat-value">{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Female}年</span>
+              ) : (
+                <span className="stat-value no-data">データなし</span>
+              )}
+            </div>
+            <div className="employee-stat-item">
+              <span className="stat-label">男性従業員の平均勤続年数</span>
+              {companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male &&
+                companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male !== "None" ? (
+                <span className="stat-value">{companyWorkplaceInfo?.base_infos?.average_continuous_service_years_Male}年</span>
+              ) : (
+                <span className="stat-value no-data">データなし</span>
+              )}
+            </div>
+          </div>
+          {companyWorkplaceInfo?.women_activity_infos?.female_workers_proportion && (
+            <div className="chart-container pie-chart">
               <Pie data={sexProportionData} options={sexProportionOptions} />
             </div>
-          </>
-        ) : (
-          <p>従業員の性別の割合のデータがありません</p>
+          )}
+        </div>
+
+        <h2 className="section-title">所在地情報</h2>
+        {resultCompanyData?.[0]?.location && (
+          <div className="data-row">
+            <span className="data-label">所在地</span>
+            <span className="data-value">{resultCompanyData[0].location}</span>
+          </div>
         )}
 
-        <p className="section-title">事業概要</p>
-        {resultCompanyData?.[0]?.descriptionOfBusiness ? (
-          <p>{resultCompanyData[0].descriptionOfBusiness}</p>
-        ) : (
-          <p>事業概要のデータがありません</p>
-        )}
-
-        <p className="section-title">所在地</p>
-        {resultCompanyData?.[0]?.location ? (
-          <p>所在地：{resultCompanyData[0].location}</p>
-        ) : (
-          <p>所在地のデータがありません</p>
-        )}
-
-        {isLoaded && resultComLat && resultComLng ? (
-          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15}>
-            <Marker position={center} />
-          </GoogleMap>
-        ) : (
-          <p>GoogleMapを表示できません</p>
+        {isLoaded && resultComLat && resultComLng && (
+          <div className="map-container">
+            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={15}>
+              <Marker position={center} />
+            </GoogleMap>
+          </div>
         )}
       </div>
 
       <div className="favoriteCompanies-wrp">
-        {favoriteCompanies.length > 0 ? (<p className="favoriteCompanies-head">お気に入り企業一覧</p>) : ""}
-        {favoriteCompanies.length > 0 ? (
-          favoriteCompanies.map((object, index) => (
-            <div key={index} className="favoriteCompany">
-              <p className="favoriteCompanies-name">{object.companyName}</p>
-              <p className="favoriteCompanies-about">{object.companyAbout}</p>
-              <div className="news-section">
-                <p className="news-section-head">{object.companyName}に関する最近のニュース</p>
-                {news[object.companyName] ? (
-                  news[object.companyName].value.map((news, i) => (
-                    <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
-                      <p className="news-description">・　{news.snippet}</p>
-                    </a>
-                  ))
-                ) : (
-                  <p>関連するニュースがありません。</p>
-                )}
-              </div>
-              <button
-                className="deleteFromFavoriteCompaniesButton"
-                onClick={() => deleteFromFavoriteCompanies(object.companyName, object.companyAbout)}
-              >
-                {object.companyName}をお気に入りから削除する
-              </button>
+        {favoriteCompanies.length > 0 && (
+          <h2 className="favoriteCompanies-head">お気に入り企業</h2>
+        )}
+        
+        {favoriteCompanies.map((company, index) => (
+          <div key={index} className="favoriteCompany">
+            <h3 className="favoriteCompanies-name">{company.companyName}</h3>
+            <p className="favoriteCompanies-about">{company.companyAbout}</p>
+            
+            <div className="news-section">
+              <h4 className="news-section-head">{company.companyName}の最新ニュース</h4>
+              {news[company.companyName] ? (
+                news[company.companyName].value.map((news, i) => (
+                  <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
+                    <p className="news-description">・ {news.snippet}</p>
+                  </a>
+                ))
+              ) : (
+                <p>関連するニュースがありません</p>
+              )}
             </div>
-          ))
-        ) : (
-          <p>お気に入りの会社がありません。</p>
+
+            <button
+              className="action-button delete"
+              onClick={() => deleteFromFavoriteCompanies(company.companyName, company.companyAbout)}
+            >
+              お気に入りから削除
+            </button>
+          </div>
+        ))}
+        
+        {favoriteCompanies.length === 0 && (
+          <p>お気に入りの企業がありません</p>
         )}
       </div>
     </div>
