@@ -306,29 +306,6 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
       <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
       
       <div className="answer">
-        {!answerLoading && response && (
-          <>
-            <div className="section-header">
-              <h2 className="section-title">AIによる企業の将来像</h2>
-              <button 
-                className={`favorite-button ${isCompanyFavorited ? 'active' : ''}`}
-                onClick={addToFavoriteCompanies}
-                disabled={isCompanyFavorited}
-                title={isCompanyFavorited ? "お気に入り登録済み" : "お気に入りに登録"}
-              >
-                {isCompanyFavorited ? <Favorite /> : <FavoriteBorder />}
-              </button>
-            </div>
-            {answerLoading ? (
-              <div className="loading-container">
-                <p>AIによる分析中...</p>
-              </div>
-            ) : (
-              <p className="company-detail">{futureGrowthChatRes}</p>
-            )}
-          </>
-        )}
-
         <h2 className="section-title">売上高の推移</h2>
         <div className="chart-container">
           {netsalesYearsLabels && netsales && netsales.some(item => item) ? (
@@ -412,6 +389,29 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
               <Marker position={center} />
             </GoogleMap>
           </div>
+        )}
+
+        {!answerLoading && response && (
+          <>
+            <div className="section-header">
+              <h2 className="section-title">AIによる企業の将来像</h2>
+              <button 
+                className={`favorite-button ${isCompanyFavorited ? 'active' : ''}`}
+                onClick={addToFavoriteCompanies}
+                disabled={isCompanyFavorited}
+                title={isCompanyFavorited ? "お気に入り登録済み" : "お気に入りに登録"}
+              >
+                {isCompanyFavorited ? <Favorite /> : <FavoriteBorder />}
+              </button>
+            </div>
+            {answerLoading ? (
+              <div className="loading-container">
+                <p>AIによる分析中...</p>
+              </div>
+            ) : (
+              <p className="company-detail">{futureGrowthChatRes}</p>
+            )}
+          </>
         )}
       </div>
 
