@@ -1,4 +1,4 @@
-import { Chat, Notifications, Search } from "@mui/icons-material";
+import { Chat, Notifications, Search, LogoutRounded, PersonRemoveRounded } from "@mui/icons-material";
 import "./Topbar.css";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../state/AuthContext";
@@ -146,7 +146,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     }
   };
 
-  const MENU_LIST_ITEM_HEIGHT = 35;
+  const MENU_LIST_ITEM_HEIGHT = 40;
 
   function MenuList({ options, getValue, maxHeight, children }) {
     if (!Array.isArray(children)) {
@@ -176,39 +176,65 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
 
   const { user } = useContext(AuthContext);
 
+  const customSelectStyles = {
+    control: (base) => ({
+      ...base,
+      width: '100%',
+      minHeight: '40px',
+      borderRadius: '20px',
+      border: '1px solid #ddd',
+      boxShadow: 'none',
+      '&:hover': {
+        border: '1px solid #2c517c'
+      }
+    }),
+    menu: (base) => ({
+      ...base,
+      borderRadius: '10px',
+      marginTop: '8px'
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected ? '#2c517c' : state.isFocused ? '#f0f5fa' : 'white',
+      '&:hover': {
+        backgroundColor: '#f0f5fa'
+      }
+    })
+  };
+
   return (
     <div className="topbarContainer">
-      <div className="topbarLeft">
-        <span className="logo">就活支援</span>
-      </div>
-      <div className="topbarCenter">
-        {/* <form onSubmit={handleSubmit}>
-          <div className="searchbar">
-            <Search className="searchIcon" />
-            <input type="text" className="searchInput" placeholder="知りたい会社名を入力" value={searchCompanyName} onChange={(e) => { setSearchCompanyName(e.target.value) }} />
-          </div>
-        </form> */}
-        <Select
-          options={companiesSelectData}
-          components={{ MenuList }}
-          onChange={handleSetSearchCompanyName}
-          placeholder="企業名を検索"
-        />
-      </div>
-      <div className="topbarRight">
-        {/* <div className="topbarIconItem">
-          <Chat />
-          <span className="topbarIconBadge">1</span>
+      <div className="topbarInner">
+        <div className="topbarLeft">
+          <span className="logo">就活支援</span>
         </div>
-        <div className="topbarIconItem">
-          <Notifications />
-          <span className="topbarIconBadge">2</span>
-        </div> */}
+        
+        <div className="topbarCenter">
+          <Select
+            options={companiesSelectData}
+            components={{ MenuList }}
+            onChange={handleSetSearchCompanyName}
+            placeholder="企業名を検索..."
+            styles={customSelectStyles}
+            className="company-select"
+          />
+        </div>
+        
+        <div className="topbarRight">
+          <div className="userActions">
+            <button type="button" onClick={logout} className="actionButton">
+              <LogoutRounded className="actionIcon" />
+              <span className="buttonText">ログアウト</span>
+            </button>
+            <button type="button" onClick={deleteAccount} className="actionButton deleteAccount">
+              <PersonRemoveRounded className="actionIcon" />
+              <span className="buttonText">アカウント削除</span>
+            </button>
+          </div>
+        </div>
       </div>
-      <button type="button" onClick={logout}>ログアウト</button>
-      <button type="button" onClick={deleteAccount}>アカウントを削除</button>
     </div>
-  )
+  );
 }
 
 export default Topbar
