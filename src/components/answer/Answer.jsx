@@ -311,7 +311,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
           {netsalesYearsLabels && netsales && netsales.some(item => item) ? (
             <Bar options={netsalesOptions} data={netsalesBarData} />
           ) : (
-            <p className="no-data-message">企業を選択すると売上高の推移が表示されます</p>
+            <p className="no-data-message">売上高の推移データがありません</p>
           )}
         </div>
 
@@ -320,7 +320,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
           {numOfEmployeesYearsLabels && numOfEmployees && numOfEmployees.some(item => item) ? (
             <Bar options={numOfEmployeesOptions} data={numOfEmployeesBarData} />
           ) : (
-            <p className="no-data-message">企業を選択すると従業員数の推移が表示されます</p>
+              <p className="no-data-message">従業員数の推移データがありません</p>
           )}
         </div>
 
