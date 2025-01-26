@@ -86,28 +86,36 @@ app.post("/api/news", async (req, res) => {
     throw new Error("Missing the AZURE_SUBSCRIPTION_KEY environment variable");
   }
   function bingWebSearch(query) {
-    https.get({
-      hostname: "api.bing.microsoft.com",
-      path: "/v7.0/search?q=" + encodeURIComponent(query),
-      headers: { "Ocp-Apim-Subscription-Key": SUBSCRIPTION_KEY },
-    }, response => {
-      let body = "";
-      response.on("data", part => body += part);
-      response.on("end", () => {
-        for (var header in response.headers) {
-          if (header.startsWith("bingapis-") || header.startsWith("x-msedge-")) {
-            console.log(header + ": " + response.headers[header]);
+    https.get(
+      {
+        hostname: "api.bing.microsoft.com",
+        path: "/v7.0/search?q=" + encodeURIComponent(query),
+        headers: {
+          "Ocp-Apim-Subscription-Key": "1be4ad01fec240aea34442d3d196e6ea",
+        },
+      },
+      (response) => {
+        let body = "";
+        response.on("data", (part) => (body += part));
+        response.on("end", () => {
+          for (var header in response.headers) {
+            if (
+              header.startsWith("bingapis-") ||
+              header.startsWith("x-msedge-")
+            ) {
+              console.log(header + ": " + response.headers[header]);
+            }
           }
-        }
-        console.log("\nJSON Response:\n");
-        console.dir(JSON.parse(body), { colors: false, depth: null });
-        res.send(JSON.parse(body));
-      });
-      response.on("error", e => {
-        console.log("Error: " + e.message);
-        throw e;
-      });
-    });
+          console.log("\nJSON Response:\n");
+          console.dir(JSON.parse(body), { colors: false, depth: null });
+          res.send(JSON.parse(body));
+        });
+        response.on("error", (e) => {
+          console.log("Error: " + e.message);
+          throw e;
+        });
+      }
+    );
   }
   const query = `${req.body.companyName}関連ニュース`;
   bingWebSearch(query);
