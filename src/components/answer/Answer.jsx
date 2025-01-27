@@ -18,7 +18,7 @@ import {
   setDefaults,
   fromAddress,
 } from "react-geocode";
-import { Favorite, FavoriteBorder } from "@mui/icons-material";
+import { Favorite, FavoriteBorder, KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 ChartJS.register(
   CategoryScale,
@@ -42,6 +42,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const [resultComLat, setResultComLat] = useState("");
   const [resultComLng, setResultComLng] = useState("");
   const [futureGrowthChatRes, setFutureGrowthChatRes] = useState("");
+  const [expandedNews, setExpandedNews] = useState({});
 
   useEffect(() => {
     if (resultCompanyData[0]?.location) {
@@ -301,10 +302,22 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const isCompanyFavorited = resultCompanyData?.[0]?.companyName && 
     favoriteCompanies.some(company => company.companyName === resultCompanyData[0].companyName);
 
+  const toggleNews = (companyName) => {
+    setExpandedNews(prev => ({
+      ...prev,
+      [companyName]: !prev[companyName]
+    }));
+  };
+
   return (
     <div className="Answer-wrp">
-      <p className="welcomeText">{user.username}さん、ようこそ就活支援へ！</p>
-      
+      <div className="answer-header">
+        <h1 className="main-title">企業分析ダッシュボード</h1>
+        {resultCompanyData?.[0]?.companyName && (
+          <h2 className="company-name">{resultCompanyData[0].companyName}</h2>
+        )}
+      </div>
+
       <div className="answer">
         <h2 className="section-title">売上高の推移</h2>
         <div className="chart-container">
@@ -391,19 +404,34 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
           </div>
         )}
 
-        {!answerLoading && response && (
+        {/* AIによる企業分析セクション */}
+        <div className="section-header">
+          <h2 className="section-title">AIによる企業分析</h2>
+          {resultCompanyData?.[0]?.companyName && (
+            <button 
+              className={`favorite-button ${isCompanyFavorited ? 'active' : ''}`}
+              onClick={addToFavoriteCompanies}
+              disabled={isCompanyFavorited}
+              title={isCompanyFavorited ? "お気に入り登録済み" : "お気に入りに登録"}
+            >
+              {isCompanyFavorited ? <Favorite /> : <FavoriteBorder />}
+            </button>
+          )}
+        </div>
+
+        {!resultCompanyData?.[0]?.companyName ? (
+          <div className="ai-prompt-message">
+            <p>企業を選択すると、AIが以下の要素を分析し、将来性を予測します：</p>
+            <ul>
+              <li>過去の売上推移</li>
+              <li>従業員数の変動</li>
+              <li>業界動向</li>
+              <li>企業の成長性・安定性</li>
+            </ul>
+          </div>
+        ) : !answerLoading && response ? (
           <>
-            <div className="section-header">
-              <h2 className="section-title">AIによる企業の将来像</h2>
-              <button 
-                className={`favorite-button ${isCompanyFavorited ? 'active' : ''}`}
-                onClick={addToFavoriteCompanies}
-                disabled={isCompanyFavorited}
-                title={isCompanyFavorited ? "お気に入り登録済み" : "お気に入りに登録"}
-              >
-                {isCompanyFavorited ? <Favorite /> : <FavoriteBorder />}
-              </button>
-            </div>
+            <h3 className="subsection-title analysis-result-title">将来性予測</h3>
             {answerLoading ? (
               <div className="loading-container">
                 <p>AIによる分析中...</p>
@@ -412,6 +440,10 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
               <p className="company-detail">{futureGrowthChatRes}</p>
             )}
           </>
+        ) : (
+          <div className="loading-container">
+            <p>企業データを分析中...</p>
+          </div>
         )}
       </div>
 
@@ -426,16 +458,30 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
             <p className="favoriteCompanies-about">{company.companyAbout}</p>
             
             <div className="news-section">
-              <h4 className="news-section-head">{company.companyName}の最新ニュース</h4>
-              {news[company.companyName] ? (
-                news[company.companyName].value.map((news, i) => (
-                  <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
-                    <p className="news-description">・ {news.snippet}</p>
-                  </a>
-                ))
-              ) : (
-                <p>関連するニュースがありません</p>
-              )}
+              <button 
+                className="news-toggle"
+                onClick={() => toggleNews(company.companyName)}
+              >
+                <h4 className="news-section-head">
+                  {company.companyName}の最新ニュース
+                  {expandedNews[company.companyName] ? 
+                    <KeyboardArrowUp /> : 
+                    <KeyboardArrowDown />
+                  }
+                </h4>
+              </button>
+              
+              <div className={`news-content ${expandedNews[company.companyName] ? 'expanded' : ''}`}>
+                {news[company.companyName] ? (
+                  news[company.companyName].value.map((news, i) => (
+                    <a key={i} className="news-item" href={news.url} target="_blank" rel="noopener noreferrer">
+                      <p className="news-description">・ {news.snippet}</p>
+                    </a>
+                  ))
+                ) : (
+                  <p className="no-news">関連するニュースがありません</p>
+                )}
+              </div>
             </div>
 
             <button

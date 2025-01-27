@@ -11,12 +11,24 @@ function Home() {
 
   return (
     <>
-      <Topbar setAnswerLoading={setAnswerLoading} setResponse={setResponse} setResultCompanyData={setResultCompanyData} setCompanyWorkplaceInfo={setCompanyWorkplaceInfo} companyWorkplaceInfo={companyWorkplaceInfo} />
-      {/*sidebar*/}
-      <Answer response={response} setResponse={setResponse} favoriteCompanies={favoriteCompanies} setFavoriteCompanies={setFavoriteCompanies} answerLoading={answerLoading} resultCompanyData={resultCompanyData} companyWorkplaceInfo={companyWorkplaceInfo} />
-      {/*rightber*/}
+      <Topbar 
+        setAnswerLoading={setAnswerLoading} 
+        setResponse={setResponse} 
+        setResultCompanyData={setResultCompanyData} 
+        setCompanyWorkplaceInfo={setCompanyWorkplaceInfo} 
+        companyWorkplaceInfo={companyWorkplaceInfo} 
+      />
+      <Answer 
+        response={response} 
+        setResponse={setResponse} 
+        favoriteCompanies={favoriteCompanies} 
+        setFavoriteCompanies={setFavoriteCompanies} 
+        answerLoading={answerLoading} 
+        resultCompanyData={resultCompanyData} 
+        companyWorkplaceInfo={companyWorkplaceInfo} 
+      />
     </>
   );
 }
 
-export default Home
+export default Home;
