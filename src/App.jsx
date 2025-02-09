@@ -6,6 +6,7 @@ import Register from "./pages/register/Register";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import { AuthContext } from "./state/AuthContext";
 import axios from 'axios';
+import Mypage from "./pages/mypage/mypage";
 
 function App() {
   const { user } = useContext(AuthContext);
@@ -26,6 +27,7 @@ function App() {
           <Route path="/" element={user ? <Home /> : <Login />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login />} />
           <Route path="/register" element={user ? <Navigate to="/" /> : <Register />} />
+          <Route path="/mypage" element={user ? <Mypage /> : <Navigate to="/login" />} />
         </Routes>
       </Router>
     </>

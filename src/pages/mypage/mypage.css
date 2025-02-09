@@ -1,0 +1,206 @@
+.mypage-container {
+  padding: 32px 24px;
+  margin-top: 70px;
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 70px);
+}
+
+.mypage-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mypage-title {
+  font-size: 28px;
+  color: #2c517c;
+  font-weight: 600;
+  margin: 0;
+}
+
+.mypage-content {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.profile-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e0ebf5;
+}
+
+.section-title {
+  font-size: 20px;
+  color: #2c517c;
+  font-weight: 600;
+  margin: 0;
+}
+
+.edit-button,
+.save-button,
+.cancel-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 20px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.edit-button {
+  background-color: #f0f5fa;
+  color: #2c517c;
+}
+
+.save-button {
+  background-color: #2c517c;
+  color: white;
+}
+
+.cancel-button {
+  background-color: #fff5f5;
+  color: #dc3545;
+  margin-left: 12px;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.info-label {
+  min-width: 180px;
+  font-weight: 600;
+  color: #4a4a4a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.info-label .MuiSvgIcon-root {
+  color: #2c517c;
+  font-size: 20px;
+}
+
+.info-value {
+  color: #333;
+  flex: 1;
+}
+
+.edit-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.edit-input:focus {
+  outline: none;
+  border-color: #2c517c;
+}
+
+.user-status {
+  margin-top: 12px;
+  display: flex;
+  gap: 24px;
+  color: #666;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-item .MuiSvgIcon-root {
+  color: #2c517c;
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .mypage-container {
+    padding: 16px 12px;
+    margin-top: 200px;
+  }
+
+  .mypage-header {
+    padding: 16px;
+  }
+
+  .mypage-title {
+    font-size: 24px;
+  }
+
+  .mypage-content {
+    padding: 16px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .info-label {
+    min-width: auto;
+  }
+
+  .edit-input {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .mypage-container {
+    margin-top: 220px;
+    padding: 12px 8px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .edit-actions {
+    width: 100%;
+  }
+
+  .edit-button,
+  .save-button,
+  .cancel-button {
+    flex: 1;
+    justify-content: center;
+  }
+} 
