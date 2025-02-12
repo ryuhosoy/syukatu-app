@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Select from 'react-select';
 import { FixedSizeList } from "react-window";
 
-function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo, netsalesPromptForChat }) {
+function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo, setAverageAnnualSalaryRanking }) {
   const [searchCompanyName, setSearchCompanyName] = useState("");
   const [companiesData, setCompaniesData] = useState("");
   const [companiesSelectData, setCompaniesSelectData] = useState([]);
@@ -18,7 +18,6 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
 
   const navigate = useNavigate();
 
-  // useEffect(第2引数[])でマウント時に毎回apiを叩く(mongodbのcompaniesからデータを取っきて、localstorageに入れとく)
   useEffect(() => {
     fetchCompaniesData();
   }, []);
@@ -40,10 +39,19 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     try {
       const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/companies/companiesData`);
       const resCompaniesData = res.data;
-      // console.log("res", resCompaniesData);
-      // localStorage.setItem("companiesData", JSON.stringify(res.data));
+      console.log("resCompaniesData", resCompaniesData);
+      
+      // 平均年収でソートしたランキングを作成
+      const sortedByAverageAnnualSalary = [...resCompaniesData]
+        .filter(company => company.averageAnnualSalary)
+        .sort((a, b) => {
+          return b.averageAnnualSalary - a.averageAnnualSalary;
+        });
+      console.log("sortedByAverageAnnualSalary", sortedByAverageAnnualSalary);
+      
+      setAverageAnnualSalaryRanking(sortedByAverageAnnualSalary);
+
       setCompaniesData(resCompaniesData);
-      // Select用のlabelとvalueを含んだ配列companiesSelectDataを作り、格納していく
       setCompaniesSelectData(
         resCompaniesData.map((resCompanyData) => {
           return {

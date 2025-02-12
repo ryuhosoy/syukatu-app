@@ -8,6 +8,7 @@ function Home() {
   const [answerLoading, setAnswerLoading] = useState(false);
   const [resultCompanyData, setResultCompanyData] = useState([]);
   const [companyWorkplaceInfo, setCompanyWorkplaceInfo] = useState("");
+  const [averageAnnualSalaryRanking, setAverageAnnualSalaryRanking] = useState([]);
 
   return (
     <>
@@ -17,6 +18,7 @@ function Home() {
         setResultCompanyData={setResultCompanyData} 
         setCompanyWorkplaceInfo={setCompanyWorkplaceInfo} 
         companyWorkplaceInfo={companyWorkplaceInfo} 
+        setAverageAnnualSalaryRanking={setAverageAnnualSalaryRanking}
       />
       <Answer 
         response={response} 
@@ -26,6 +28,7 @@ function Home() {
         answerLoading={answerLoading} 
         resultCompanyData={resultCompanyData} 
         companyWorkplaceInfo={companyWorkplaceInfo} 
+        averageAnnualSalaryRanking={averageAnnualSalaryRanking}
       />
     </>
   );

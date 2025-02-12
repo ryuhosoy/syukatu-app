@@ -547,3 +547,51 @@
     margin: 20px 0 12px;
   }
 }
+
+.salary-ranking {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.ranking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.ranking-number {
+  font-weight: bold;
+  min-width: 30px;
+  margin-right: 15px;
+}
+
+.ranking-company {
+  flex: 1;
+}
+
+.ranking-salary {
+  font-weight: bold;
+  color: #2196f3;
+}
+
+.ranking-item:nth-child(1) .ranking-number {
+  color: #ffd700;
+}
+
+.ranking-item:nth-child(2) .ranking-number {
+  color: #c0c0c0;
+}
+
+.ranking-item:nth-child(3) .ranking-number {
+  color: #cd7f32;
+}

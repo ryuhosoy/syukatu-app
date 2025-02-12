@@ -43,6 +43,7 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
   const [resultComLng, setResultComLng] = useState("");
   const [futureGrowthChatRes, setFutureGrowthChatRes] = useState("");
   const [expandedNews, setExpandedNews] = useState({});
+  const [averageAnnualSalaryRanking, setAverageAnnualSalaryRanking] = useState([]);
 
   useEffect(() => {
     if (resultCompanyData[0]?.location) {
@@ -309,6 +310,19 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     }));
   };
 
+  useEffect(() => {
+    fetchAverageAnnualSalaryRanking();
+  }, []);
+
+  const fetchAverageAnnualSalaryRanking = async () => {
+    try {
+      const res = await axios.get('https://syukatu-app-backend.vercel.app/api/companies/averageAnnualSalaryRanking');
+      setAverageAnnualSalaryRanking(res.data);
+    } catch (err) {
+      console.error("給与ランキング取得エラー:", err);
+    }
+  };
+
   return (
     <div className="Answer-wrp">
       <div className="answer-header">
@@ -403,6 +417,25 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
             </GoogleMap>
           </div>
         )}
+
+        <h2 className="section-title">平均年間給与ランキング</h2>
+        <div className="salary-ranking">
+          {averageAnnualSalaryRanking.length > 0 ? (
+            <div className="ranking-list">
+              {averageAnnualSalaryRanking.map((company, index) => (
+                <div key={index} className="ranking-item">
+                  <span className="ranking-number">{index + 1}</span>
+                  <span className="ranking-company">{company.companyName}</span>
+                  <span className="ranking-salary">
+                    {company.averageAnnualSalary.toLocaleString()}円
+                  </span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="no-data-message">ランキングデータを読み込み中...</p>
+          )}
+        </div>
 
         {/* AIによる企業分析セクション */}
         <div className="section-header">
