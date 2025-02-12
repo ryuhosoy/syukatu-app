@@ -43,7 +43,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
       
       // 平均年収でソートしたランキングを作成
       const sortedByAverageAnnualSalary = [...resCompaniesData]
-        .filter(company => company.averageAnnualSalary)
+        .filter(company => company.averageAnnualSalary && !isNaN(company.averageAnnualSalary))
         .sort((a, b) => {
           return b.averageAnnualSalary - a.averageAnnualSalary;
         });

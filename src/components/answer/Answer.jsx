@@ -36,14 +36,14 @@ setDefaults({
   region: "jp",
 });
 
-function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData, companyWorkplaceInfo }) {
+function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoading, resultCompanyData, companyWorkplaceInfo, averageAnnualSalaryRanking }) {
   const [news, setNews] = useState([]);
   const [resultComLocation, setResultComLocation] = useState(null);
   const [resultComLat, setResultComLat] = useState("");
   const [resultComLng, setResultComLng] = useState("");
   const [futureGrowthChatRes, setFutureGrowthChatRes] = useState("");
   const [expandedNews, setExpandedNews] = useState({});
-  const [averageAnnualSalaryRanking, setAverageAnnualSalaryRanking] = useState([]);
+  const [isRankingExpanded, setIsRankingExpanded] = useState(false);
 
   useEffect(() => {
     if (resultCompanyData[0]?.location) {
@@ -310,19 +310,6 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
     }));
   };
 
-  useEffect(() => {
-    fetchAverageAnnualSalaryRanking();
-  }, []);
-
-  const fetchAverageAnnualSalaryRanking = async () => {
-    try {
-      const res = await axios.get('https://syukatu-app-backend.vercel.app/api/companies/averageAnnualSalaryRanking');
-      setAverageAnnualSalaryRanking(res.data);
-    } catch (err) {
-      console.error("給与ランキング取得エラー:", err);
-    }
-  };
-
   return (
     <div className="Answer-wrp">
       <div className="answer-header">
@@ -419,22 +406,37 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
         )}
 
         <h2 className="section-title">平均年間給与ランキング</h2>
-        <div className="salary-ranking">
-          {averageAnnualSalaryRanking.length > 0 ? (
-            <div className="ranking-list">
-              {averageAnnualSalaryRanking.map((company, index) => (
-                <div key={index} className="ranking-item">
-                  <span className="ranking-number">{index + 1}</span>
-                  <span className="ranking-company">{company.companyName}</span>
-                  <span className="ranking-salary">
-                    {company.averageAnnualSalary.toLocaleString()}円
-                  </span>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="no-data-message">ランキングデータを読み込み中...</p>
-          )}
+        <div className="news-section">
+          <button 
+            className="news-toggle"
+            onClick={() => setIsRankingExpanded(!isRankingExpanded)}
+          >
+            <h4 className="news-section-head">
+              平均年間給与ランキング（全{averageAnnualSalaryRanking?.length || 0}社）
+              {isRankingExpanded ? 
+                <KeyboardArrowUp /> : 
+                <KeyboardArrowDown />
+              }
+            </h4>
+          </button>
+          
+          <div className={`news-content ${isRankingExpanded ? 'expanded' : ''}`}>
+            {averageAnnualSalaryRanking && averageAnnualSalaryRanking.length > 0 ? (
+              <div className="ranking-list">
+                {averageAnnualSalaryRanking.map((company, index) => (
+                  <div key={index} className="ranking-item">
+                    <span className="ranking-number">{index + 1}</span>
+                    <span className="ranking-company">{company.companyName}</span>
+                    <span className="ranking-salary">
+                      {Number(company.averageAnnualSalary).toLocaleString()}円
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="no-data-message">ランキングデータがありません</p>
+            )}
+          </div>
         </div>
 
         {/* AIによる企業分析セクション */}
