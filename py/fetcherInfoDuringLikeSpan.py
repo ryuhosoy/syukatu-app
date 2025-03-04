@@ -150,7 +150,7 @@ def translate_period(report_end_date: str, duration: str) -> str:
 for docId in docid_list:
     docID = docId
     url = f"https://api.edinet-fsa.go.jp/api/v2/documents/{docID}?type=5&Subscription-Key=39459a691efa40a19a37ef106ab93e73"
-    output_dir = "./content-edinet/financial_zip_files"
+    output_dir = "../content-edinet/financial_zip_files"
     companyName = edinet_df[edinet_df["docID"] == docID]["会社名"].tolist()[0]
     print(companyName)
 
@@ -168,13 +168,13 @@ for docId in docid_list:
         else:
             raise e
 
-    os.makedirs(f"content-edinet/financial_zip_files/{docID}", exist_ok=True)
-    with zipfile.ZipFile(f"content-edinet/financial_zip_files/{docID}.zip") as zip_f:
-        zip_f.extractall(f"content-edinet/financial_zip_files/{docID}")
+    os.makedirs(f"../content-edinet/financial_zip_files/{docID}", exist_ok=True)
+    with zipfile.ZipFile(f"../content-edinet/financial_zip_files/{docID}.zip") as zip_f:
+        zip_f.extractall(f"../content-edinet/financial_zip_files/{docID}")
 
     # 一つずつのdocId(S-----)に対してjpcrpを名前に含むcsvファイルを読みこみ、jpcrp_cor:NetSalesSummaryOfBusinessResultsのCurrentYearDurationをprintする
 
-    xbrl_expression = f"content-edinet/financial_zip_files/{docID}/XBRL_TO_CSV/jpcrp*"
+    xbrl_expression = f"../content-edinet/financial_zip_files/{docID}/XBRL_TO_CSV/jpcrp*"
     xbrl_paths = glob(xbrl_expression, recursive=True)
     print(xbrl_paths)
     # print(xbrl_paths[0])
