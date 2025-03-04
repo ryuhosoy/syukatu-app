@@ -9,7 +9,7 @@ load_dotenv(".env")
 mongoURI = os.getenv("MONGO_URI")
 client = MongoClient(mongoURI)
 
-base_dir = "content-edinet"
+base_dir = "../content-edinet"
 
 zip_url = (
     "https://disclosure2dl.edinet-fsa.go.jp/searchdocument/codelist/Edinetcode.zip"
