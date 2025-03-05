@@ -151,6 +151,10 @@ for docId in docid_list:
     docID = docId
     url = f"https://api.edinet-fsa.go.jp/api/v2/documents/{docID}?type=5&Subscription-Key=39459a691efa40a19a37ef106ab93e73"
     output_dir = "../content-edinet/financial_zip_files"
+    
+    # 出力ディレクトリが存在しない場合は作成
+    os.makedirs(output_dir, exist_ok=True)
+    
     companyName = edinet_df[edinet_df["docID"] == docID]["会社名"].tolist()[0]
     print(companyName)
 
@@ -158,7 +162,7 @@ for docId in docid_list:
         # ZIPファイルのダウンロード
         with urllib.request.urlopen(url) as res:
             content = res.read()
-            output_path = os.path.join(output_dir, f"{docID}.zip")  # ファイルパスを結合
+            output_path = os.path.join(output_dir, f"{docID}.zip")
         with open(output_path, "wb") as file_out:
             file_out.write(content)
             print(f"File saved to {output_path}")
@@ -168,9 +172,12 @@ for docId in docid_list:
         else:
             raise e
 
-    os.makedirs(f"../content-edinet/financial_zip_files/{docID}", exist_ok=True)
-    with zipfile.ZipFile(f"../content-edinet/financial_zip_files/{docID}.zip") as zip_f:
-        zip_f.extractall(f"../content-edinet/financial_zip_files/{docID}")
+    # 解凍先のディレクトリを作成
+    extract_dir = os.path.join(output_dir, docID)
+    os.makedirs(extract_dir, exist_ok=True)
+
+    with zipfile.ZipFile(output_path) as zip_f:
+        zip_f.extractall(extract_dir)
 
     # 一つずつのdocId(S-----)に対してjpcrpを名前に含むcsvファイルを読みこみ、jpcrp_cor:NetSalesSummaryOfBusinessResultsのCurrentYearDurationをprintする
 
