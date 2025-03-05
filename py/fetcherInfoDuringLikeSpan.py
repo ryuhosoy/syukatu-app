@@ -121,7 +121,7 @@ class GetDocid:
         return merged_df
 
 
-start_date = datetime.date(2024, 3, 1)
+start_date = datetime.date.today() - datetime.timedelta(days=1)
 end_date = datetime.date.today()
 
 gd = GetDocid(start_date, end_date)
