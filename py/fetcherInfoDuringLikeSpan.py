@@ -14,7 +14,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-mongoURI = os.getenv()
+# mongoURI = os.getenv()
 client = MongoClient("mongodb+srv://ryuhosoy:Buchan-ryuhei1@cluster0.utalj.mongodb.net/")
 
 # 警告を特定のものに限定する
