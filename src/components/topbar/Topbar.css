@@ -70,12 +70,14 @@
   left: 0;
   z-index: 100;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 64px;
+  padding-right: calc(100vw - 100%);
 }
 
 .topbarInner {
   max-width: 1200px;
   margin: 0 auto;
-  height: 70px;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -88,127 +90,78 @@
 }
 
 .logo {
-  font-size: 24px;
+  font-size: 20px;
   color: #2c517c;
   font-weight: bold;
   letter-spacing: 0.5px;
   white-space: nowrap;
 }
 
-.topbarCenter {
-  flex: 2;
-  max-width: 500px;
-  margin: 0 48px;
-}
-
-.company-select {
-  width: 100%;
-}
-
 .topbarRight {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
-  min-width: 280px;
-  margin-left: 48px;
-}
-
-.userActions {
-  display: flex;
-  gap: 12px;
-}
-
-.actionButton {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+}
+
+.topbarActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.iconButton {
+  background: none;
   border: none;
-  border-radius: 20px;
-  background-color: #f0f5fa;
-  color: #2c517c;
-  font-weight: 500;
+  padding: 8px;
   cursor: pointer;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2c517c;
   transition: all 0.2s ease;
-  white-space: nowrap;
 }
 
-.actionButton:hover {
-  background-color: #e0ebf5;
+.iconButton:hover {
+  background-color: #f0f5fa;
 }
 
-.actionButton.deleteAccount {
+.iconButton.delete {
   color: #dc3545;
+}
+
+.iconButton.delete:hover {
   background-color: #fff5f5;
 }
 
-.actionButton.deleteAccount:hover {
-  background-color: #ffe5e5;
+.userMenu {
+  display: flex;
+  gap: 8px;
+  margin-left: 16px;
+  padding-left: 16px;
+  border-left: 1px solid #e0ebf5;
 }
 
-.actionIcon {
-  font-size: 20px;
-}
-
-@media (max-width: 1100px) {
-  .topbarCenter {
-    margin: 0 24px;
-  }
-}
-
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   .topbarInner {
-    height: auto;
-    flex-direction: column;
-    padding: 16px;
-    gap: 16px;
-  }
-
-  .topbarLeft, .topbarCenter, .topbarRight {
-    flex: none;
-    width: 100%;
-    max-width: none;
-    margin: 0;
-  }
-
-  .topbarLeft {
-    text-align: center;
-  }
-
-  .topbarRight {
-    min-width: 0;
-  }
-
-  .userActions {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .actionButton {
-    flex: 1;
-    justify-content: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .topbarInner {
-    padding: 12px;
+    padding: 0 16px;
   }
 
   .logo {
-    font-size: 20px;
+    font-size: 18px;
   }
 
-  .userActions {
-    flex-direction: column;
+  .iconButton {
+    padding: 6px;
   }
 
-  .actionButton {
-    padding: 8px 12px;
-    font-size: 14px;
+  .userMenu {
+    margin-left: 8px;
+    padding-left: 8px;
   }
+}
 
-  .buttonText {
-    font-size: 13px;
-  }
+/* モーダル表示時のbody要素のスタイル */
+body.modal-open {
+  overflow: hidden;
+  padding-right: calc(100vw - 100%);
 }

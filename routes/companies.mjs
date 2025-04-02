@@ -14,7 +14,16 @@ router.get("/companiesData", async (req, res) => {
       return syukatudb.collection("companies").find().toArray();
     })
     .then((companies) => {
-      // console.log(companies);
+      // // データ容量のログ出力
+      // const dataSize = JSON.stringify(companies).length;
+      // console.log(`データ容量: ${(dataSize / 1024 / 1024).toFixed(2)} MB`);
+      // console.log(`レコード数: ${companies.length}`);
+      
+      // // サンプルデータの構造を確認
+      // if (companies.length > 0) {
+      //   console.log('サンプルデータ構造:', Object.keys(companies[0]));
+      // }
+
       return res.status(200).json(companies);
     })
     .catch((err) => {

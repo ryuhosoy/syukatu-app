@@ -349,7 +349,17 @@ function Answer({ response, favoriteCompanies, setFavoriteCompanies, answerLoadi
         {resultCompanyData?.[0]?.averageAnnualSalary && resultCompanyData?.[0]?.averageAnnualSalary !== "None" && (
           <div className="data-row">
             <span className="data-label">平均年間給与</span>
-            <span className="data-value">{resultCompanyData[0].averageAnnualSalary}円</span>
+            <span className="data-value">
+              {resultCompanyData[0].averageAnnualSalary}円
+              {averageAnnualSalaryRanking && averageAnnualSalaryRanking.length > 0 && (
+                <span className="salary-rank">
+                  （{averageAnnualSalaryRanking.length}社中
+                  {averageAnnualSalaryRanking.findIndex(
+                    company => company.companyName === resultCompanyData[0].companyName
+                  ) + 1}位）
+                </span>
+              )}
+            </span>
           </div>
         )}
 

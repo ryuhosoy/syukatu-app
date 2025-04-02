@@ -1,4 +1,4 @@
-import { Chat, Notifications, Search, LogoutRounded, PersonRemoveRounded } from "@mui/icons-material";
+import { Search, Favorite, FavoriteBorder, LogoutRounded, PersonRemoveRounded } from "@mui/icons-material";
 import "./Topbar.css";
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../state/AuthContext";
@@ -7,14 +7,17 @@ import { logoutCall } from "../../actionCalls";
 import { useNavigate } from "react-router-dom";
 import Select from 'react-select';
 import { FixedSizeList } from "react-window";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 
 function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompanyWorkplaceInfo, companyWorkplaceInfo, setAverageAnnualSalaryRanking }) {
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
   const [searchCompanyName, setSearchCompanyName] = useState("");
   const [companiesData, setCompaniesData] = useState("");
   const [companiesSelectData, setCompaniesSelectData] = useState([]);
   const [searchCorporateNumber, setSearchCorporateNumber] = useState("");
 
-  const { dispatch } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -39,11 +42,20 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     try {
       const res = await axios.get(`https://syukatu-app-backend.vercel.app/api/companies/companiesData`);
       const resCompaniesData = res.data;
+      
+      // データ容量のログ出力
+      const dataSize = JSON.stringify(resCompaniesData).length;
+      console.log(`データ容量: ${(dataSize / 1024 / 1024).toFixed(2)} MB`);
+      console.log(`レコード数: ${resCompaniesData.length}`);
       console.log("resCompaniesData", resCompaniesData);
       
       // 平均年収でソートしたランキングを作成
       const sortedByAverageAnnualSalary = [...resCompaniesData]
-        .filter(company => company.averageAnnualSalary && !isNaN(company.averageAnnualSalary))
+        .filter(company => 
+          company.averageAnnualSalary && 
+          !isNaN(company.averageAnnualSalary) &&
+          company.averageAnnualSalary.toString().length < 9
+        )
         .sort((a, b) => {
           return b.averageAnnualSalary - a.averageAnnualSalary;
         });
@@ -130,18 +142,13 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     }
   };
 
-  const logout = async () => {
-    await logoutCall({
-      email: user.email,
-    }, dispatch);
+  const handleLogout = async () => {
+    await logoutCall({ email: user.email }, dispatch);
     navigate("/login");
   };
 
-  const deleteAccount = async () => {
-    await logoutCall({
-      email: user.email,
-    }, dispatch);
-
+  const handleDeleteAccount = async () => {
+    await logoutCall({ email: user.email }, dispatch);
     try {
       await axios.delete(`https://syukatu-app-backend.vercel.app/api/users/${user._id}`, {
         data: {
@@ -152,6 +159,7 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     } catch (err) {
       console.error(err);
     }
+    setIsDeleteConfirmOpen(false);
   };
 
   const MENU_LIST_ITEM_HEIGHT = 40;
@@ -182,8 +190,6 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     );
   }
 
-  const { user } = useContext(AuthContext);
-
   const customSelectStyles = {
     control: (base) => ({
       ...base,
@@ -210,6 +216,16 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
     })
   };
 
+  const handleSearchOpen = () => {
+    document.body.classList.add('modal-open');
+    setIsSearchOpen(true);
+  };
+
+  const handleSearchClose = () => {
+    document.body.classList.remove('modal-open');
+    setIsSearchOpen(false);
+  };
+
   return (
     <div className="topbarContainer">
       <div className="topbarInner">
@@ -217,30 +233,89 @@ function Topbar({ setAnswerLoading, setResponse, setResultCompanyData, setCompan
           <span className="logo">就活支援</span>
         </div>
         
-        <div className="topbarCenter">
+        <div className="topbarRight">
+          <div className="topbarActions">
+            <button 
+              className="iconButton"
+              onClick={handleSearchOpen}
+              title="企業検索"
+            >
+              <Search />
+            </button>
+            {/* <button 
+              className="iconButton"
+              onClick={() => navigate('/favorites')}
+              title="お気に入り"
+            >
+              <FavoriteBorder />
+            </button> */}
+            <div className="userMenu">
+              <button 
+                className="iconButton"
+                onClick={handleLogout}
+                title="ログアウト"
+              >
+                <LogoutRounded />
+              </button>
+              <button 
+                className="iconButton delete"
+                onClick={() => setIsDeleteConfirmOpen(true)}
+                title="アカウント削除"
+              >
+                <PersonRemoveRounded />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 検索モーダル */}
+      <Dialog 
+        open={isSearchOpen} 
+        onClose={handleSearchClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            overflow: 'visible'
+          }
+        }}
+      >
+        <DialogTitle>企業検索</DialogTitle>
+        <DialogContent sx={{ overflow: 'visible' }}>
           <Select
             options={companiesSelectData}
             components={{ MenuList }}
             onChange={handleSetSearchCompanyName}
             placeholder="企業名を検索..."
-            styles={customSelectStyles}
+            styles={{
+              ...customSelectStyles,
+              menu: (base) => ({
+                ...base,
+                position: 'absolute',
+                zIndex: 9999,
+                width: '100%'
+              })
+            }}
             className="company-select"
           />
-        </div>
-        
-        <div className="topbarRight">
-          <div className="userActions">
-            <button type="button" onClick={logout} className="actionButton">
-              <LogoutRounded className="actionIcon" />
-              <span className="buttonText">ログアウト</span>
-            </button>
-            <button type="button" onClick={deleteAccount} className="actionButton deleteAccount">
-              <PersonRemoveRounded className="actionIcon" />
-              <span className="buttonText">アカウント削除</span>
-            </button>
-          </div>
-        </div>
-      </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* アカウント削除確認モーダル */}
+      <Dialog
+        open={isDeleteConfirmOpen}
+        onClose={() => setIsDeleteConfirmOpen(false)}
+      >
+        <DialogTitle>アカウントを削除しますか？</DialogTitle>
+        <DialogContent>
+          <p>この操作は取り消せません。本当にアカウントを削除しますか？</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsDeleteConfirmOpen(false)}>キャンセル</Button>
+          <Button onClick={handleDeleteAccount} color="error">削除</Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
