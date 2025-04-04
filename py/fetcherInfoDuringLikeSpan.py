@@ -14,8 +14,9 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 
 load_dotenv(".env")
-# mongoURI = os.getenv()
-client = MongoClient("mongodb+srv://ryuhosoy:Buchan-ryuhei1@cluster0.utalj.mongodb.net/")
+
+mongo_uri = os.getenv("MONGO_URI") 
+client = MongoClient(mongo_uri)
 
 # 警告を特定のものに限定する
 warnings.filterwarnings("ignore", category=DeprecationWarning)

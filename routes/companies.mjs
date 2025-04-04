@@ -11,7 +11,7 @@ env.config();
 const router = express.Router();
 const MongoClient = mongodb.MongoClient;
 // const redisClient = new Redis(
-//   "rediss://default:AYfpAAIjcDFjNzBiOTVkNzJiNDg0OWU0YmM3YThhYWYyY2U3MDU0MHAxMA@close-parakeet-34793.upstash.io:6379"
+//   ""
 // );
 
 // redisClient.on("connect", () => {
