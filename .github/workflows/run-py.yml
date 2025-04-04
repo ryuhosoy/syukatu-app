@@ -24,6 +24,10 @@ jobs:
         # 必要な依存関係をインストール
         pip install -r py-requirements.txt
 
+        
+    - name: Set up environment variables
+      run: echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> $GITHUB_ENV
+
     - name: Run fetcherInfoDuringLikeSpan.py
       run: python py/fetcherInfoDuringLikeSpan.py
 
