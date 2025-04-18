@@ -10,6 +10,9 @@ import axios from "axios";
 env.config();
 const router = express.Router();
 const MongoClient = mongodb.MongoClient;
+
+//Github actionsか何かでmongodbから定期的に企業データをredisに分割して保存しておくファイルを定期実行し、そこから企業データを取得
+
 // const redisClient = new Redis(
 //   ""
 // );
