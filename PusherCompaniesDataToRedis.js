@@ -5,7 +5,7 @@ const BATCH_SIZE = 500; // 一度に処理するデータ数を500社に増や�
 const CACHE_EXPIRY = 60 * 60 * 24; // キャッシュの有効期限を24時間に設定
 
 async function syncCompaniesData() {
-  const mongoClient = await MongoClient.connect(process.env.MONGODB_URI);
+  const mongoClient = await MongoClient.connect(process.env.MONGO_URI);
   const redisClient = new Redis(process.env.REDIS_URL);
 
   try {
