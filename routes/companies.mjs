@@ -40,47 +40,60 @@ const MongoClient = mongodb.MongoClient;
 
 // 企業データ取得 API (キャッシュ対応)
 router.get("/companiesData", async (req, res) => {
-  try {
-    const cacheData = await redisClient.get("companiesData");
-    if (cacheData) {
-      console.log("redisキャッシュデータがあります");
-      return res.json(JSON.parse(cacheData));
-    } else {
-      console.log("redisキャッシュデータがありません");
-    }
+  MongoClient.connect(process.env.MONGO_URI)
+     .then((client) => {
+       const syukatudb = client.db("syukatu");
+       return syukatudb.collection("companies").find().toArray();
+     })
+     .then((companies) => {
+       // console.log(companies);
+       return res.status(200).json(companies);
+     })
+     .catch((err) => {
+       console.error(err);
+       return res.status(500).json(err);
+     });
+  // try {
+  //   const cacheData = await redisClient.get("companiesData");
+  //   if (cacheData) {
+  //     console.log("redisキャッシュデータがあります");
+  //     return res.json(JSON.parse(cacheData));
+  //   } else {
+  //     console.log("redisキャッシュデータがありません");
+  //   }
 
-    const companies = await getCompaniesFromMongoDB();
-    const data = JSON.stringify(companies);
+  //   const companies = await getCompaniesFromMongoDB();
+  //   const data = JSON.stringify(companies);
 
-    const minifiedJson = JSON.stringify(data, null, 0);
+  //   const minifiedJson = JSON.stringify(data, null, 0);
 
-    // const packedData = msgpack.packb(minifiedJson);
-    // JSON を MessagePack に変換
-    // const packedData = msgpack.encode(minifiedJson);
+  //   // const packedData = msgpack.packb(minifiedJson);
+  //   // JSON を MessagePack に変換
+  //   // const packedData = msgpack.encode(minifiedJson);
 
-    const packedData = zstd.compress(msgpack.encode(minifiedJson), {
-      level: 22 // Zstandardの最大圧縮レベル
-    });
+  //   const packedData = zstd.compress(msgpack.encode(minifiedJson), {
+  //     level: 22 // Zstandardの最大圧縮レベル
+  //   });
 
-    const brotliOptions = {
-      params: {
-        [zlib.constants.BROTLI_PARAM_QUALITY]: 11, // 最大圧縮
-        [zlib.constants.BROTLI_PARAM_LGWIN]: 24, // 最大辞書サイズ
-      },
-    };
+  //   const brotliOptions = {
+  //     params: {
+  //       [zlib.constants.BROTLI_PARAM_QUALITY]: 11, // 最大圧縮
+  //       [zlib.constants.BROTLI_PARAM_LGWIN]: 24, // 最大辞書サイズ
+  //     },
+  //   };
 
-    // MessagePack を Brotli 圧縮
-    zlib.brotliCompress(packedData, brotliOptions, (err, compressedData) => {
-      if (!err) {
-        redisClient.setBuffer("companiesData", compressedData);
-      }
-    });
+  //   // MessagePack を Brotli 圧縮
+  //   zlib.brotliCompress(packedData, brotliOptions, (err, compressedData) => {
+  //     if (!err) {
+  //       redisClient.setBuffer("companiesData", compressedData);
+  //     }
+  //   });
 
-    res.json(companies);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetcing companies data" });
-  }
+  //   res.json(companies);
+  // } catch (error) {
+  //   console.error(error);
+  //   res.status(500).json({ message: "Error fetcing companies data" });
+  // }
 });
 
 // キャッシュ更新用 API
